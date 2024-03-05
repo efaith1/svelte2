@@ -1,15 +1,12 @@
-
-console.log("IT’S ALIVE!");
-
 function $$ (selector, context = document) {
     return Array.from(context.querySelectorAll(selector));
 }
 
 let pages = {
-    './': "Home",
-   "projects": "Projects",
-   "contact" : "Contact",
-   "resume": "Resume",
+    'svelte2': "Home",
+   "svelte2/projects": "Projects",
+   "svelte2/contact" : "Contact",
+   "svelte2/resume": "Resume",
     "https://github.com/efaith1/Esther-F.-website": "Github"}
 ;
 
