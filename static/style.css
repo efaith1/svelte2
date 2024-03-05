@@ -1,0 +1,172 @@
+:root {
+  --color-accent: #ffd700; 
+  --color-title: rgb(214, 118, 9);
+  --color-button: rgb(189, 217, 220);
+  --color-button-hover: rgb(129, 234, 229);
+  --background-image-light: url('images/pillow.png');
+  --background-image-dark: url('images/cat.png');
+}
+
+html {
+  accent-color: var(--color-accent); 
+  color-scheme: light dark;
+  background-image: var(--background-image-light);
+  margin: 0;
+}
+
+img{
+  max-width: 100%; 
+  height: auto;
+}
+
+body.dark-mode {
+  background-image: var(--background-image-dark);
+}
+
+/* body */
+body {
+    font: 100%/1.5 system-ui;
+
+    position: absolute;
+    background-position: center;
+    background-repeat: repeat;
+    background-size: cover;
+
+    min-width: 100%;
+    min-height: 100%;  
+    padding: 5px;
+    margin-inline: auto;
+   }
+
+
+/* dark mode */
+.color-scheme {
+  position: absolute;
+  top: 20px;
+  right: 5px;
+  padding: 40px; 
+  border-radius: 5px; 
+  font-size: 80%; 
+  font-family: inherit; 
+}
+
+#colorSchemeSelect {
+  padding-right: 20px;
+  font-family: inherit; 
+}
+
+
+/* navbar */
+nav {
+  animation: fun 10s infinite;
+  display: flex;
+  margin-bottom: 10px; 
+  position: fixed;
+  width: 100%;
+  top: 0;
+}
+
+@keyframes fun {
+  0% {
+    background-color: rgb(127, 34, 135);
+  }
+  30% {
+    background-color: rgb(34, 111, 173);
+  }
+  50% {
+    background-color: rgb(124, 182, 37);
+  }
+  75% {
+    background-color: rgb(203, 139, 18);
+  }
+  100% {
+    background-color: rgb(179, 48, 113);
+  }
+}
+
+nav ul,
+nav li {
+  display: contents;
+}
+
+nav a {
+  text-decoration: none; 
+  color: white; 
+  text-align: center;
+  padding: 0.5em;
+  display: block;
+  flex: 1;
+}
+
+nav a:hover {
+  color:var(--color-accent); 
+}
+
+
+
+/* projects page */
+.projects {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15em, 1fr));
+  gap: 1em; 
+}
+
+.projects h2 {
+  margin: 0;
+}
+
+h1 {
+  font-size: 400%; 
+  line-height: 1.1; 
+}
+
+h2, h3, h4, h5, h6 {
+  line-height: 1.1; 
+} 
+
+
+
+/* resume page */
+.resume-container {
+  border: 2px solid black;
+  padding: 20px; 
+}
+
+.resumeName {
+  text-align: center;
+}
+
+.resume-container h2 { 
+  margin: 0; 
+  color: var(--color-title)
+}
+
+
+
+/* contact page */
+form {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1em;
+}
+
+button {
+  text-align: center;
+  display: grid;
+  grid-template-columns: subgrid;
+  grid-column: 1 / -1;
+  background-color: var(--color-button);
+  justify-content: center;
+  align-items: center;
+}
+
+button:hover {
+  background-color: var(--color-button-hover);
+}
+
+input, textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px; 
+  margin-block: 5px 0; 
+}

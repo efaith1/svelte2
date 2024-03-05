@@ -1,0 +1,171 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<title>Vis & Society Assignment 3</title>
+	<link rel="stylesheet" href="https://vis-society.github.io/assignments/report.css" />
+	<style>
+        img {
+          width: 300px; 
+          height: auto; 
+        }
+      </style> 
+
+</head>
+
+<body>
+	<header>
+		<h1>
+			<small>Assignment 3</small>
+			Visualization Design
+		</h1>
+
+		<p>
+			<strong>Esther Kinyanjui - MIT 6.C35, Spring 2024</strong>
+		</p>
+	</header>
+
+	<main>
+		<section>
+			<h2>Phase One: Sketching Visualizations</h2>
+			<p> <b>Question posed:</b> Do the census numbers show any clear patterns in how different age groups' and gender's populations changed over the 20th century?</p>
+
+      <figure>
+				<img src="../images/spiral.jpg" alt="" />
+				<figcaption><i>
+					A time Spiral representing each year of the 20th century as a segment of a spiral, 
+					with the thickness of each segment representing the population distribution across different age groups. 
+				</i></figcaption>
+			</figure>
+
+			<p>
+				<b>Design Rationale for Sketch 1:</b>
+			</p>
+
+			<ul>
+				<b> Motivation:</b> The motivation behind using a time spiral is to communicate how 
+				population distribution across age groups changed over time in a visually appealing and 
+				easy-to-understand format.
+				<b> What Worked Well:</b> The time spiral effectively conveys the changes in population 
+				distribution over the 20th century.
+				<b> What Didn’t work well:</b> While the time spiral effectively communicates the quantitative aspect 
+				of the data, it may not provide detailed insights into specific gender dynamics within 
+				age groups without additional annotation.
+				<b> Next Exploration:</b> In the next sketch, I would like to explore a visualization 
+				that offers more detailed insights into population dynamics within specific age groups, 
+				perhaps through the use of a hierarchical or nested structure.
+			</ul>
+      <figure>
+				<img src="../images/age_rings.jpg" alt="" />
+				<figcaption>
+          			<i>Age tree ring showing the total population count in 1900 and 2000.</i>
+				</figcaption>
+			</figure>
+
+			<p>
+				<b>Design Rationale for Sketch 2</b>
+			</p>
+
+			<ul>
+				<b> Motivation:</b> The motivation behind using an age tree ring is to 
+				visualize population changes over time in a hierarchical manner, 
+				with each ring representing a different year and segments within each 
+				ring representing different age groups. The goal is to provide a structured 
+				and layered visualization that allows for a deeper exploration of population 
+				dynamics within specific time periods and age groups, and provide an easier way to compare the difference between the two years.
+				<b> What Worked Well:</b> The age tree ring effectively organizes the data 
+				hierarchically and allows for a detailed examination of population changes 
+				across both time and age groups.
+				<b> What Didn’t:</b> While the age tree ring offers a structured view of the data, 
+				it may become visually cluttered or difficult to interpret when dealing with a 
+				large number of age groups or decades. It also does not include the gender dynamics within age groups.
+				<b> Next Exploration:</b> In the next sketch, I would like to explore a 
+				visualization that incorporates less cluttered visualization and more visually distinct representations that enable users to 
+				explore specific age groups or time periods in more detail.
+			</ul>
+
+      <figure>
+				<img src="../images/flow_network.jpg" alt="" />
+				<figcaption>
+          		<i>A simple network visualization representing population count change between year 1900 and year 2000.</i>
+				</figcaption>
+			</figure>
+
+			<p>
+				<b>Design Rationale for Sketch 3</b>
+			</p>
+
+			<ul>
+				<b> Motivation:</b> The motivation behind using an age flow network 
+				is to visualize population transitions between different age groups 
+				over the two years. The goal is to illustrate the dynamic nature of population 
+				flows across age groups, highlighting 
+				key transitions and trends with more conspicuous visual encodings.
+				<b> What Worked Well:</b> The age flow network captures the relational 
+				aspect of population dynamics and allows for the identification 
+				of significant transitions and trends over time.
+				<b> What Didn’t:</b> While the age flow network offers insights 
+				into population flows, it requires careful design to ensure 
+				that the visualization remains comprehensible and interpretable, 
+				especially when dealing with complex or overlapping transitions.
+				<b> Next Exploration:</b> In the next sketch, I would like to explore 
+				additional annotations to a visualization that can show me both the dynamics between 
+				age groups and between genders while avoiding clutter and being very easy to interpret.</p>
+			</ul>
+
+      <h3>Reflection</h3>
+
+      <p>
+        In reviewing the three sketches, each demonstrates distinct strengths and weaknesses. 
+		The time spiral effectively captures quantitative changes but lacks detail. 
+		The age tree ring provides hierarchical organization but risks visual clutter. 
+		The age flow network offers relational insights but may be challenging to interpret. 
+		In the next phase, I plan to synthesize elements from all sketches, aiming for a comprehensive visualization
+		that can show me both the dynamics between age groups and between genders while avoiding clutter and still being very easy to interpret.
+      </p>
+
+		</section>
+
+		<section>
+			<h2>Phase Two: Final Design</h2>
+
+			<figure>
+				<img src="../images/Population_pyramid.png" alt="" />
+				<figcaption><i>
+					A population pyramid representing the total age and gender distributions within the population.
+				</i></figcaption>
+			</figure>
+		</section>
+
+		<section>
+			<h2>Design Process & Design Decisions</h2>
+				<p>
+					For the final visualization, I chose to create a population pyramid, a classic and intuitive way 
+					to represent age and gender distributions within a population. To prepare the data, I binned 
+					the census data provided into age groups and calculated the total population for each gender within each 
+					age group.
+					I then created calculated fields for male and female data to ensure that the gender dynamics were being explicitly 
+					captured. Additionally, I color coded the two sums of the populations and reversed the axis of one of the genders, creating a population pyramid.
+				</p><p>
+					These transformations allowed me to focus on the relative distribution of age groups and gender 
+					balance within the population pyramid. By arranging the age groups symmetrically around the central axis, the population pyramid effectively 
+					highlighted differences in age and gender distributions across the 20th century. The story I am trying to tell is one 
+					which shows clear patterns in how different age groups' and gender's total populations changed over the two years and how they compare, and I 
+					think the population pyramid does the best job at conveying that. 
+				</p>
+      <h3>Reflection</h3>
+
+      <p>
+        Reflecting on phase one, the sketches provided valuable insights into different 
+		visualization approaches and allowed me to experiment with unconventional designs. While I 
+		ultimately chose a more traditional visualization for the final product, the exploration of 
+		alternative designs influenced my decision-making process. For example, the hierarchical structure of the 
+		age tree ring sketch inspired me to organize the age groups within the population pyramid in a systematic manner, 
+		facilitating comparison and interpretation. The attempt at the age flow network emphasized the need for an easily interpretable design, and 
+		all three sketches highlighted the need for a visualization with explicit expressiveness for the two genders represented in the data. 
+		Overall, phase one helped me refine my understanding of the 
+		data and informed my design decisions for the final visualization.
+      </p>
+		</section>
+	</main>
+</body>
+</html>

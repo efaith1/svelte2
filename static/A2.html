@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>6.C35 Assignment 2</title>
+</head>
+
+<body>
+
+    <header>
+        <h1>6.C35 Assignment 2: Exploratory Data Analysis</h1>
+        <h2>Esther Kinyanjui - MIT 6.C35, Spring 2024</h2>
+    </header>
+
+    <section>
+        <h1>Dataset</h1>
+        <p>This dataset contains the residential sales data in the city of Boston from the year 2000 to 2023. It includes
+            information about the seller, buyer, price, location, whether the sale constitutes a 'flip', style of the
+            building (e.g high-rise), and more information about residential buildings sold in the city. This dataset is
+            provided by The Warren Group. The analysis will focus on the high end of the price points and on specific
+            hi-rises and luxury housing and explore how an increased development of such properties affect the average
+            Bostonians.</p>
+    </section>
+
+    <section>
+        <h1>Overall Analysis questions</h1>
+        <ol>
+            <li>
+                <h2>How do luxury high-rises in Boston contribute to the widening housing gap and wealth inequality in the
+                    city?</h2>
+                <p>Motivation: The article “Reckoning with Boston’s Towers of Wealth" by the Boston Globe highlights the
+                    stark difference between the luxury condos in towers like One Dalton and the housing needs of
+                    lower-income residents in Boston...</p>
+            </li>
+            <li>
+                <h2>What are the motivations behind developers disproportionately focusing on luxury real estate projects
+                    in Boston, rather than affordable housing options?</h2>
+                <p>Motivation: The article “Reckoning with Boston’s Towers of Wealth" by the Boston Globe suggests that
+                    there is significant disparity in the construction of luxury condos versus affordable units...</p>
+            </li>
+            <li>
+                <h2>In what ways can city officials and policymakers strike a balance between promoting luxury real estate
+                    projects for economic growth and addressing the pressing affordable housing needs of Boston
+                    residents?</h2>
+                <p>Motivation: The tension shown in the article “Reckoning with Boston’s Towers of Wealth" by the Boston
+                    Globe between supporting luxury developments for economic benefits and addressing the housing crisis
+                    underscores the need for effective policy measures...</p>
+            </li>
+        </ol>
+    </section>
+
+    <section>
+        <h1>Discoveries and Insights</h1>
+
+        <p>To assess the data quality and resolution, we first explore the styles of buildings covered by this dataset,
+            and the temporal coverage that the dataset provides. In the context of this analysis, we can start by
+            plotting how many hi-rises were built per year.</p>
+
+        <figure>
+            <figcaption><b>Number of high rises built by year</b></figcaption>
+            <img src="../../images/num_hirise_by_year.png" alt="A cute cat">
+            <figcaption><i>This is a caption.</i></figcaption>
+        </figure>
+
+        <p>We can immmediately see that despite the dataset's promise to show the number of units sold per year, the "year" attribute only shows how many of a given style of building were built in a given year. The time when a property was sold is actually given by the "date" attribute, which is a very confusing phenomenon. The dates also span to 2022 unlike the promised 2023. Nonetheless, we can explore the question of how luxury buildings contribute to a widening housing gap and wealth inequality by asking the following question: how do different investor types contribute to the construction of luxury houses? </p>
+
+
+        <figure>
+            <figcaption><b>Sum of Lot Sizes Purchases vs Investor Type</b></figcaption>
+            <img src="../../images/lot_size_per_inv.png" alt="A cute cat">
+            <figcaption><i>This is a caption.</i></figcaption>
+        </figure>
+        <p>To produce this visualization, I had to filter out the styles of buildings to include only high-end properties; namely high-rise, mid-rise, low-rise, condos, and row buildings. Among the different types of investors, non-investors acquire the majority of the square feet taken up by most luxury housing. This knowledge is both intuitive and counterintuitive. It makes sense because I included low rises and condos which are relatively more affordable and there are significantly more average Bostonians than there are the mega-rich, but it is counterintuitive because the readings suggested that high-end luxury apartments had a huge negative impact, which is not reflected here. This prompts me to think that the cost of luxury housing must be astronomically high, which leads me to ask two questions, what is the average price of the types of properties investors buy, and how much is the average sale price of these luxury apartments?</p>
+
+        <figure>
+            <figcaption><b>Average Cash Sale vs Investor Type</b></figcaption>
+            <img src="../../images/data_2.png" alt="A cute cat">
+            <figcaption><i>This is a caption.</i></figcaption>
+        </figure>
+
+        <p>Using the same representation as before lets us starkly see the relationship between the lotsizes of apartments and their prices. Though the majority of buildings by square footage in Boston are bought by non-investors, the price of these buildings is significantly low compared to the price of the few buildings owned by investors. Small, medium, large, and institutional investors contribute the highest average price range of buildings bought in Boston. This explains why they cannot afford to buy a significant amount of buildings given their unsightly price tags. </p>
+        <figure>
+            <figcaption><b>Average Last Sale Price vs Style</b></figcaption>
+            <img src="../../images/last_sales-price.png" alt="A cute cat">
+            <figcaption><i>This is a caption.</i></figcaption>
+        </figure>
+
+        <p>As a response to the second follow up question posed above, we now investigate the average last sale price of buildings by style. For this visualization, I had to filter off a few building styles whose values were essentially negligible compared to the others. Something interesting to note is that the average sale price of one unit in a high rise is close to that of an entire townhouse or condo. This is still counter-intuitive because I am yet to see the harm of luxury housing since it seems to be a space-efficient building choice. But not everyone can afford or wants to live in a luxury housing everyday, and you would assume the existance of luxury housing has no effect on them, right?</p>
+
+        <figure>
+            <figcaption><b>Count of style by the years</b></figcaption>
+            <img src="../../images/count_of_style_by_the_years.png" alt="A cute cat">
+            <figcaption><i>This is a caption.</i></figcaption>
+        </figure>
+
+        <figure>
+            <figcaption><b>Average price vs Style</b></figcaption>
+            <img src="../../images/increasing_avg_price.png" alt="A cute cat">
+            <figcaption><i>This is a caption.</i></figcaption>
+        </figure>
+
+        <p>According to these two visualization, the evil of luxury housing lies in its effect on the price of other types of buildings. The more luxury houses are built, the higher the cost of other building types go as well. The first visualization made by filtering the years to only show buildings sold between 2010 and 2021 shows that luxury building sales have been on the rise and continue to go up. Althought the relationships is not definitely causal, we can still see by the second visualization that the price of all building types has been on the rise over the years. But how can we be certain that this relationship is causal? </p>
+        <figure>
+            <figcaption><b>Style vs Investor Type</b></figcaption>
+            <img src="../../images/pie_charts.png" alt="A cute cat">
+            <figcaption><i>This is a caption.</i></figcaption>
+        </figure>
+
+        <p>To answer this follow up question, we shall need to both look into our second main analysis question about the motivation of developers disproportionately focusing on luxury real estate projects in Boston rather than affordable housing options, and draw on the conclusions made in the article “Reckoning with Boston’s Towers of Wealth" by the Boston Globe about the direct correlation between investor involvement in luxury property purchases and dwindling affordable housing numbers. The visualization above was filtered to only include luxury housing like high rises and row houses, and it confirms that investors do in fact take the majority of the "pie" in property sales relating to luxury housing. </p>
+        <figure>
+            <figcaption><b>Count of Style vs Style</b></figcaption>
+            <img src="../../images/total_cnt_style.png" alt="A cute cat">
+            <figcaption><i>This is a caption.</i></figcaption>
+        </figure>
+        <p>From the data shown in the first two visualizations highlighting the inverse relation between square footage and sales price, this visualization supports the logical conclusion that developers would arrive to to build more high rise properties and luxury buildings in general for maximum profit, thus explaining why developers would favor focusing on luxury real estate projects. To answer our first analysis question by tapping into the conclusions of the article “Reckoning with Boston’s Towers of Wealth" by the Boston Globe, the increased production of such buildings at the expense of more affordable housing drives the wedge deeper in Boston's housing gap and wealth inequality.</p>
+
+        <figure>
+            <figcaption><b>Total price of Residential Building by Street</b></figcaption>
+            <img src="../../images/price_by_street.png" alt="A cute cat">
+            <figcaption><i>This is a caption.</i></figcaption>
+        </figure>
+
+        <p>Our last analysis question looked into the impact that policymakers can have. Luckily, the data shows that this is possible. We have already concluded that the more luxurious houses cost the most, and so this visualization showing the total price of residential buildings by street can help pinpoint the hotspots that developers and investors target, and get some zoning sort of policy applied to them by policymakers. Important to note is that the streets portrayed in this visualization are only those whose net worth is above 50 million dollars, which is a high bar that many streets do not cut.</p>>
+        <figure>
+            <figcaption><b>Total Properties Owned vs Investor Type</b></figcaption>
+            <img src="../../images/total_owned_bubble.png" alt="A cute cat">
+            <figcaption><i>This is a caption.</i></figcaption>
+        </figure>
+
+        <p>Additionally, the above visualization shows the total number of luxury housing owned by various investment bodies compared to non investors, and policymakers can use this information to regulate the growth of luxury buildings by for example having a maximum number of real estate investments per investment body or increasing taxes with increasing number of properties owned. These measures can help reduce the impact that developers and investors associated with luxury buildings have on the average Bostonian.</p>>
+        <figure>
+            <figcaption><b>Total Properties Owned & Total Price vs Investor Type</b></figcaption>
+            <img src="../../images/total_owned_vs_price.png" alt="A cute cat">
+            <figcaption><i>This is a caption.</i></figcaption>
+        </figure>
+
+        <p>This visualization highlights the necessity to regulate institutional investment vehicles in perticular for their over-arching contribution to increasing housing costs driven by the amount of luxury buildings they purchase and the price at which they do so. </p>
+
+    </section>
+
+    <section>
+        <h1>Summary of Findings and Conclusions</h1>
+        <p>The analysis underscores the intricate relationship between luxury housing, investor involvement, and its impact
+            on the housing landscape in Boston. While luxury housing may offer space efficiency, its high cost
+            contributes to rising housing prices across the city. Policymakers have the opportunity to use data-driven
+            insights to strike a balance between promoting economic growth through luxury real estate and addressing the
+            pressing need for affordable housing.</p>
+    </section>
+
+</body>
+
+</html>
