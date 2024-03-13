@@ -43,21 +43,21 @@ for (let url in pages) {
 
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-    const colorSchemeControl = document.createElement("label");
-    colorSchemeControl.className = "color-scheme";
-    colorSchemeControl.innerHTML = `
-      Theme:
-      <select id="colorSchemeSelect">
-        <option value="auto">Automatic</option>
-        <option value="light">Light</option>
-        <option value="dark">Dark</option>
-      </select>
-    `;
+// document.addEventListener("DOMContentLoaded", function () {
+//     const colorSchemeControl = document.createElement("label");
+//     colorSchemeControl.className = "color-scheme";
+    // colorSchemeControl.innerHTML = `
+    //   Theme:
+    //   <select id="colorSchemeSelect">
+    //     <option value="auto">Automatic</option>
+    //     <option value="light">Light</option>
+    //     <option value="dark">Dark</option>
+    //   </select>
+    // `;
   
     // Insert the control at the start of the <body> element
-    document.body.insertAdjacentElement("afterbegin", colorSchemeControl);
-  });
+  //   document.body.insertAdjacentElement("afterbegin", colorSchemeControl);
+  // });
   
 
   document.addEventListener("DOMContentLoaded", function () {

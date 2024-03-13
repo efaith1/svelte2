@@ -1,7 +1,25 @@
 <script>
     import projects from '$lib/projects.json';
     import Project from "$lib/Project.svelte";
-    </script>
+
+    let profileData; 
+  
+    // Fetching data from GitHub API
+    fetchProfileData();
+  
+    async function fetchProfileData() {
+      try {
+        let response = await fetch("https://api.github.com/users/efaith1");
+        if (response.ok) {
+          profileData = await response.json();
+        } else {
+          throw new Error("Failed to fetch profile data");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+</script>
 
 <h1>Esther F.</h1>
 <img src="images/me.jpg" alt="A photo of me smiling really hard" width="260" height="300">
@@ -14,3 +32,23 @@
         <Project info={project} hLevel={3} />
     {/each}
 </div>
+  
+  <section>
+    <h2>GitHub Profile Stats</h2>
+    
+    {#if profileData}
+      <dl>
+        <div>
+          <dt>Public Repositories</dt>
+          <dd>{profileData.public_repos}</dd>
+        </div>
+        <div>
+          <dt>Followers</dt>
+          <dd>{profileData.followers}</dd>
+        </div>
+      </dl>
+    {:else}
+      <p>Nothing to show...</p>
+    {/if}
+  </section>
+  
