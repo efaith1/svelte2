@@ -12,7 +12,7 @@ YOLO <slot />
     const root = globalThis?.document?.documentElement;
     const body = globalThis?.document?.body;
 
-    $: localStorage.colorScheme = colorScheme;
+    // $: localStorage.colorScheme = colorScheme;
     $: root?.style.setProperty("color-scheme", colorScheme);
     $: body?.classList.toggle('dark-mode', colorScheme === 'dark');
 
