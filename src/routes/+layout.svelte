@@ -2,19 +2,35 @@ YOLO <slot />
 <!-- ohh my days yolo important, do not delete -->
 
 <script>
-  let colorScheme = "light dark"; 
-  let localStorage = globalThis.localStorage ?? {}; 
+    let colorScheme = "light"; 
+    const localStorage = globalThis.localStorage ?? {}; 
 
-  if (localStorage.colorScheme) {
-        colorScheme = localStorage.colorScheme;
+    if (localStorage.colorScheme) {
+            colorScheme = localStorage.colorScheme;
+        }
+
+    const root = globalThis?.document?.documentElement;
+    const body = globalThis?.document?.body;
+
+    // $: localStorage.colorScheme = colorScheme;
+    // $: root?.style.setProperty("color-scheme", colorScheme);
+    // $: body?.classList.toggle('dark-mode', colorScheme === 'dark');
+
+    function changeColorScheme() {
+        colorScheme = event.target.value;
+        localStorage.colorScheme = colorScheme;
+        root.style.setProperty("color-scheme", colorScheme);
+        body.classList.toggle('dark-mode', colorScheme === 'dark');
     }
 
-    let root = globalThis?.document?.documentElement;
-    let body = globalThis?.document?.body;
+    function initColorScheme() {
+        root.style.setProperty("color-scheme", colorScheme);
+        body.classList.toggle('dark-mode', colorScheme === 'dark');
+    }
 
-    $: localStorage.colorScheme = colorScheme;
-    $: root?.style.setProperty("color-scheme", colorScheme);
-    $: body?.classList.toggle('dark-mode', colorScheme === 'dark');
+    $: {
+        initColorScheme();
+    }
 
 </script>
 
@@ -22,7 +38,7 @@ YOLO <slot />
 <label class="color-scheme">
   Theme:
   <!-- on:change={changeColorScheme} -->
-  <select id="colorSchemeSelect" bind:value={colorScheme}> 
+  <select id="colorSchemeSelect" bind:value={colorScheme} on:change={changeColorScheme}> 
     <option value="light">Light</option>
     <option value="dark">Dark</option>
   </select>
