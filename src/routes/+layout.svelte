@@ -1,42 +1,65 @@
-YOLO <slot />
-
 <script>
-    let colorScheme = "light dark"; 
-    let localStorage = globalThis.localStorage ?? {}; 
-  
-    if (localStorage.colorScheme) {
-      colorScheme = localStorage.colorScheme;
+  let colorScheme = "light dark"; 
+  let localStorage = globalThis.localStorage ?? {}; 
+  let root = globalThis?.document?.documentElement;
+
+  if (localStorage.colorScheme) {
+        colorScheme = localStorage.colorScheme;
     }
-  
-    let root = globalThis?.document?.documentElement;
-    $: root?.style.setProperty("color-scheme", colorScheme);
-  
+
+    $: {
+        root?.style.setProperty("color-scheme", colorScheme);
+        localStorage.colorScheme = colorScheme;
+    }
+
     $: localStorage.colorScheme = colorScheme;
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const select = document.querySelector("#colorSchemeSelect");
+
+        select.addEventListener("input", function (event) {
+            colorScheme = event.target.value;
+            document.documentElement.style.setProperty("color-scheme", colorScheme);
+            document.body.classList.toggle('dark-mode', colorScheme === 'dark');
+            localStorage.setItem("colorScheme", colorScheme);
+        });
+    });
 
 </script>
 
 
-<!-- Theme: -->
-<select id="colorSchemeSelect" bind:value={ colorScheme }>
-<option value="auto">Automatic</option>
-<option value="light">Light</option>
-<option value="dark">Dark</option>
-</select>
+<label class="color-scheme">
+  Theme:
+  <select bind:value={colorScheme} on:change={changeColorScheme}>
+    <option value="auto">Automatic</option>
+    <option value="light">Light</option>
+    <option value="dark">Dark</option>
+  </select>
+</label>
 
 <style>
-/* dark mode */
-    .color-scheme {
+  /* Theme switcher */
+  .color-scheme {
     position: absolute;
     top: 20px;
     right: 5px;
-    padding: 40px; 
-    border-radius: 5px; 
-    font-size: 80%; 
-    font-family: inherit; 
-    }
+    padding: 40px;
+    border-radius: 5px;
+    font-size: 80%;
+    font-family: inherit;
+  }
 
-    #colorSchemeSelect {
+  #colorSchemeSelect {
     padding-right: 20px;
-    font-family: inherit; 
-    }
+    font-family: inherit;
+  }
+
+  body.dark-mode {
+    background-image: var(--background-image-dark);
+  }
 </style>
+
+
+    
+
+
