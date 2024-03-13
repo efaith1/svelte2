@@ -60,7 +60,7 @@
     {/if}
   </section>
 
-  <!-- <style>
+  <style>
     section {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -75,5 +75,5 @@
       grid-row: 1 / span 2;
       padding: 5px;
     }
-  </style> -->
+  </style>
   
