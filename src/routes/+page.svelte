@@ -46,7 +46,7 @@
             <dd>{profileData.following}</dd>
           </div>
         <div>
-            <dt><b>Public Repositories</b></dt>
+            <dt><b>Public Repos</b></dt>
             <dd>{profileData.public_repos}</dd>
           </div>
         <div>

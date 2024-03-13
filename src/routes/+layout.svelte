@@ -60,10 +60,6 @@ YOLO <slot />
     padding-right: 20px;
     font-family: inherit;
   }
-
-  body.dark-mode {
-    background-image: var(--background-image-dark);
-  }
 </style>
 
 
