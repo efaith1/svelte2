@@ -12,25 +12,30 @@
         localStorage.colorScheme = colorScheme;
     }
 
-    $: localStorage.colorScheme = colorScheme;
+    // document.addEventListener("DOMContentLoaded", function () {
+    //     const select = document.querySelector("#colorSchemeSelect");
 
-    document.addEventListener("DOMContentLoaded", function () {
-        const select = document.querySelector("#colorSchemeSelect");
-
-        select.addEventListener("input", function (event) {
-            colorScheme = event.target.value;
-            document.documentElement.style.setProperty("color-scheme", colorScheme);
-            document.body.classList.toggle('dark-mode', colorScheme === 'dark');
-            localStorage.setItem("colorScheme", colorScheme);
-        });
-    });
+    //     select.addEventListener("input", function (event) {
+    //         colorScheme = event.target.value;
+    //         document.documentElement.style.setProperty("color-scheme", colorScheme);
+    //         document.body.classList.toggle('dark-mode', colorScheme === 'dark');
+    //         localStorage.setItem("colorScheme", colorScheme);
+    //     });
+    // });
+    function changeColorScheme(event) {
+    colorScheme = event.target.value;
+    document.documentElement.style.setProperty("color-scheme", colorScheme);
+    document.body.classList.toggle('dark-mode', colorScheme === 'dark');
+    localStorage.setItem("colorScheme", colorScheme);
+  }
 
 </script>
 
 
 <label class="color-scheme">
   Theme:
-  <select bind:value={colorScheme} on:change={changeColorScheme}>
+  <!-- on:change={changeColorScheme} -->
+  <select id="colorSchemeSelect" bind:value={colorScheme} on:change={changeColorScheme}> 
     <option value="auto">Automatic</option>
     <option value="light">Light</option>
     <option value="dark">Dark</option>
