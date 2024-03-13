@@ -35,21 +35,28 @@ YOLO <slot />
 </label>
 
 <style>
-  /* Theme switcher */
-  .color-scheme {
-    position: absolute;
-    top: 20px;
-    right: 5px;
-    padding: 40px;
-    border-radius: 5px;
-    font-size: 80%;
-    font-family: inherit;
-  }
+    :root {
+        --background-image-dark: url('images/cat.png');
+    }
 
-  #colorSchemeSelect {
-    padding-right: 20px;
-    font-family: inherit;
-  }
+    body.dark-mode {
+        background-image: var(--background-image-dark);
+    }
+
+    .color-scheme {
+        position: absolute;
+        top: 20px;
+        right: 5px;
+        padding: 40px;
+        border-radius: 5px;
+        font-size: 80%;
+        font-family: inherit;
+    }
+
+    #colorSchemeSelect {
+        padding-right: 20px;
+        font-family: inherit;
+    }
 </style>
 
 
