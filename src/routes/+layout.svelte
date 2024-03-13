@@ -35,14 +35,6 @@ YOLO <slot />
 </label>
 
 <style>
-    :root {
-        --background-image-dark: url('images/cat.png');
-    }
-
-    body.dark-mode {
-        background-image: var(--background-image-dark);
-    }
-
     .color-scheme {
         position: absolute;
         top: 20px;
