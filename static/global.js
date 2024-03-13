@@ -42,39 +42,4 @@ for (let url in pages) {
     }
 
 }
-
-// document.addEventListener("DOMContentLoaded", function () {
-//     const colorSchemeControl = document.createElement("label");
-//     colorSchemeControl.className = "color-scheme";
-//     colorSchemeControl.innerHTML = `
-//       Theme:
-//       <select id="colorSchemeSelect">
-//         <option value="auto">Automatic</option>
-//         <option value="light">Light</option>
-//         <option value="dark">Dark</option>
-//       </select>
-//     `;
-  
-//     // Insert the control at the start of the <body> element
-//     document.body.insertAdjacentElement("afterbegin", colorSchemeControl);
-//   });
-  
-
-  // document.addEventListener("DOMContentLoaded", function () {
-  //   const select = document.querySelector("#colorSchemeSelect");
-  
-  //   select.addEventListener("input", function (event) {  
-  //     document.documentElement.style.setProperty("color-scheme", event.target.value);
-  //     document.body.classList.toggle('dark-mode', event.target.value === 'dark');
-  //     localStorage.setItem("colorScheme", event.target.value);
-  //   });
-  
-  //   // Load the user's preference
-  //   const savedColorScheme = localStorage.getItem("colorScheme");
-  //   if (savedColorScheme) {
-  //     document.documentElement.style.setProperty("color-scheme", savedColorScheme);
-  //     select.value = savedColorScheme;
-  //     document.body.classList.toggle('dark-mode', savedColorScheme === 'dark');
-  //   }
-  // });
   

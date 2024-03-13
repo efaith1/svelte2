@@ -22,12 +22,12 @@
     //         localStorage.setItem("colorScheme", colorScheme);
     //     });
     // });
-    function changeColorScheme(event) {
-    colorScheme = event.target.value;
-    document.documentElement.style.setProperty("color-scheme", colorScheme);
-    document.body.classList.toggle('dark-mode', colorScheme === 'dark');
-    localStorage.setItem("colorScheme", colorScheme);
-  }
+    // function changeColorScheme(event) {
+    // colorScheme = event.target.value;
+    // document.documentElement.style.setProperty("color-scheme", colorScheme);
+    // document.body.classList.toggle('dark-mode', colorScheme === 'dark');
+    // localStorage.setItem("colorScheme", colorScheme);
+//   }
 
 </script>
 
@@ -35,7 +35,7 @@
 <label class="color-scheme">
   Theme:
   <!-- on:change={changeColorScheme} -->
-  <select id="colorSchemeSelect" bind:value={colorScheme} on:change={changeColorScheme}> 
+  <select id="colorSchemeSelect" bind:value={colorScheme}> 
     <option value="auto">Automatic</option>
     <option value="light">Light</option>
     <option value="dark">Dark</option>
