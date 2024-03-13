@@ -33,25 +33,24 @@
     {/each}
 </div>
   
-  <section>
-    <h2>GitHub Profile Stats</h2>
-    
+<h2>GitHub Profile Stats</h2>
+  <section>    
     {#if profileData}
       <dl>
         <div>
-          <dt>Followers</dt>
+          <dt><b>Followers</b></dt>
           <dd>{profileData.followers}</dd>
         </div>
         <div>
-            <dt>Following</dt>
+            <dt><b>Following</b></dt>
             <dd>{profileData.following}</dd>
           </div>
         <div>
-            <dt>Public Repositories</dt>
+            <dt><b>Public Repositories</b></dt>
             <dd>{profileData.public_repos}</dd>
           </div>
         <div>
-            <dt>Public GISTS</dt>
+            <dt><b>Public GISTS</b></dt>
             <dd>{profileData.public_gists}</dd>
           </div>
       </dl>
