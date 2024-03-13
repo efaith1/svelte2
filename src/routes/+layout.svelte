@@ -10,29 +10,11 @@ YOLO <slot />
     }
 
     let root = globalThis?.document?.documentElement;
+    let body = globalThis?.document?.body;
 
     $: localStorage.colorScheme = colorScheme;
     $: root?.style.setProperty("color-scheme", colorScheme);
-
-
-    // document.addEventListener("DOMContentLoaded", function () {
-    //     const select = document.querySelector("#colorSchemeSelect");
-
-    //     select.addEventListener("input", function (event) {
-    //         colorScheme = event.target.value;
-    //         document.documentElement.style.setProperty("color-scheme", colorScheme);
-    //         document.body.classList.toggle('dark-mode', colorScheme === 'dark');
-    //         localStorage.setItem("colorScheme", colorScheme);
-    //     });
-    // });
-    
-    function changeColorScheme(event) {
-    colorScheme = event.target.value;
-    console.log('Changing color scheme:', event.target.value);
-    document.documentElement.style.setProperty("color-scheme", colorScheme);
-    document.body.classList.toggle('dark-mode', colorScheme === 'dark');
-    localStorage.setItem("colorScheme", colorScheme);
-  }
+    $: body?.classList.toggle('dark-mode', colorScheme === 'dark');
 
 </script>
 
@@ -40,7 +22,7 @@ YOLO <slot />
 <label class="color-scheme">
   Theme:
   <!-- on:change={changeColorScheme} -->
-  <select id="colorSchemeSelect" bind:value={colorScheme} on:change={changeColorScheme}> 
+  <select id="colorSchemeSelect" bind:value={colorScheme}> 
     <option value="light">Light</option>
     <option value="dark">Dark</option>
   </select>
