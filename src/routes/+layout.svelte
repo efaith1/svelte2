@@ -1,16 +1,16 @@
 <script>
   let colorScheme = "light dark"; 
   let localStorage = globalThis.localStorage ?? {}; 
-  let root = globalThis?.document?.documentElement;
 
   if (localStorage.colorScheme) {
         colorScheme = localStorage.colorScheme;
     }
 
-    $: {
-        root?.style.setProperty("color-scheme", colorScheme);
-        localStorage.colorScheme = colorScheme;
-    }
+    let root = globalThis?.document?.documentElement;
+
+    $: localStorage.colorScheme = colorScheme;
+    $: root?.style.setProperty("color-scheme", colorScheme);
+
 
     // document.addEventListener("DOMContentLoaded", function () {
     //     const select = document.querySelector("#colorSchemeSelect");
@@ -36,7 +36,6 @@
   Theme:
   <!-- on:change={changeColorScheme} -->
   <select id="colorSchemeSelect" bind:value={colorScheme}> 
-    <option value="auto">Automatic</option>
     <option value="light">Light</option>
     <option value="dark">Dark</option>
   </select>
