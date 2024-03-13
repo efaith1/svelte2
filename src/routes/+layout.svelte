@@ -12,7 +12,7 @@ YOLO <slot />
     const root = globalThis?.document?.documentElement;
     const body = globalThis?.document?.body;
 
-    // $: localStorage.colorScheme = colorScheme;
+    $: localStorage.colorScheme = colorScheme;
     $: root?.style.setProperty("color-scheme", colorScheme);
     $: body?.classList.toggle('dark-mode', colorScheme === 'dark');
 
@@ -28,7 +28,6 @@ YOLO <slot />
 
 <label class="color-scheme">
   Theme:
-  <!-- on:change={changeColorScheme} -->
   <select id="colorSchemeSelect" bind:value={colorScheme} on:change={changeColorScheme}> 
     <option value="light">Light</option>
     <option value="dark">Dark</option>
