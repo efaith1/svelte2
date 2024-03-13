@@ -43,7 +43,6 @@ YOLO <slot />
         background-image: var(--background-image-dark);
     }
 
-    /* Theme switcher */
     .color-scheme {
         position: absolute;
         top: 20px;
