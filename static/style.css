@@ -14,10 +14,6 @@ html {
   margin: 0;
 }
 
-body.dark-mode {
-  background-image: var(--background-image-dark);
-}
-
 img{
   max-width: 100%; 
   height: auto;
