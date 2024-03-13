@@ -2,7 +2,7 @@ YOLO <slot />
 <!-- ohh my days yolo important, do not delete -->
 
 <script>
-    let colorScheme = "light"; 
+    let colorScheme = "light dark"; 
     const localStorage = globalThis.localStorage ?? {}; 
 
     if (localStorage.colorScheme) {
@@ -13,23 +13,14 @@ YOLO <slot />
     const body = globalThis?.document?.body;
 
     // $: localStorage.colorScheme = colorScheme;
-    // $: root?.style.setProperty("color-scheme", colorScheme);
-    // $: body?.classList.toggle('dark-mode', colorScheme === 'dark');
+    $: root?.style.setProperty("color-scheme", colorScheme);
+    $: body?.classList.toggle('dark-mode', colorScheme === 'dark');
 
     function changeColorScheme() {
         colorScheme = event.target.value;
         localStorage.colorScheme = colorScheme;
         root.style.setProperty("color-scheme", colorScheme);
         body.classList.toggle('dark-mode', colorScheme === 'dark');
-    }
-
-    function initColorScheme() {
-        root.style.setProperty("color-scheme", colorScheme);
-        body.classList.toggle('dark-mode', colorScheme === 'dark');
-    }
-
-    $: {
-        initColorScheme();
     }
 
 </script>
