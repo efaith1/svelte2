@@ -2,7 +2,7 @@ YOLO <slot />
 <!-- ohh my days yolo important, do not delete -->
 
 <script>
-    let colorScheme = "light dark"; 
+    let colorScheme = "light"; 
     const localStorage = globalThis.localStorage ?? {}; 
 
     if (localStorage.colorScheme) {
@@ -35,14 +35,6 @@ YOLO <slot />
 </label>
 
 <style>
-    :root {
-        --background-image-dark: url('images/cat.png');
-    }
-
-    body.dark-mode {
-        background-image: var(--background-image-dark);
-    }
-
     .color-scheme {
         position: absolute;
         top: 20px;
