@@ -19,9 +19,9 @@ img{
   height: auto;
 }
 
-body.dark-mode {
+/* body.dark-mode {
   background-image: var(--background-image-dark);
-}
+} */
 
 /* body */
 body {
@@ -39,8 +39,8 @@ body {
    }
 
 
-/* dark mode
-.color-scheme {
+/* dark mode */
+/* .color-scheme {
   position: absolute;
   top: 20px;
   right: 5px;

@@ -39,16 +39,41 @@
     {#if profileData}
       <dl>
         <div>
-          <dt>Public Repositories</dt>
-          <dd>{profileData.public_repos}</dd>
-        </div>
-        <div>
           <dt>Followers</dt>
           <dd>{profileData.followers}</dd>
         </div>
+        <div>
+            <dt>Following</dt>
+            <dd>{profileData.following}</dd>
+          </div>
+        <div>
+            <dt>Public Repositories</dt>
+            <dd>{profileData.public_repos}</dd>
+          </div>
+        <div>
+            <dt>Public GISTS</dt>
+            <dd>{profileData.public_gists}</dd>
+          </div>
       </dl>
     {:else}
       <p>Nothing to show...</p>
     {/if}
   </section>
+
+  <style>
+    section {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px; 
+    }
+  
+    dl {
+      display: contents;
+    }
+  
+    dt, dd {
+      grid-row: 1 / span 2;
+      padding: 5px;
+    }
+  </style>
   
