@@ -10,7 +10,7 @@
 html {
   accent-color: var(--color-accent); 
   color-scheme: light dark;
-  /* background-image: var(--background-image-light); */
+  background-image: var(--background-image-light);
   margin: 0;
 }
 
