@@ -1,3 +1,5 @@
+YOLO <slot />
+
 <script>
   let colorScheme = "light dark"; 
   let localStorage = globalThis.localStorage ?? {}; 
@@ -35,7 +37,7 @@
 <label class="color-scheme">
   Theme:
   <!-- on:change={changeColorScheme} -->
-  <select id="colorSchemeSelect" bind:value={colorScheme}> 
+  <select bind:value={colorScheme}> 
     <option value="light">Light</option>
     <option value="dark">Dark</option>
   </select>
