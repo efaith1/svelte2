@@ -66,7 +66,6 @@
         border-radius: 5px;
         font-size: 16px;
         outline: none;
-        width: 300px;
     }
 
     input[type="search"]:focus {
