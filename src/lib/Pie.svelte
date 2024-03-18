@@ -44,14 +44,14 @@
 
     </svg>
     
-    <ul class="legend">
+    <!-- <ul class="legend">
         {#each data as d, index}
             <li style="--color: { colors(index) }">
                 <span class="swatch"></span>
                 {d.label} <em>({d.value})</em>
             </li>
         {/each}
-    </ul>
+    </ul> -->
 </div>
 
 <style>
