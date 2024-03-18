@@ -12,7 +12,7 @@
     .year {
         font-family: Baskerville, serif;
         font-variant-numeric: oldstyle-nums;
-        margin-top: 10px; 
+        margin-top: 2 px; 
     }
 </style>
 
@@ -23,6 +23,6 @@
 <img src={info.image} alt="">
 <p>{info.description}</p>
 {#if info.year}
-    <div class="year">{info.year}</div>
+    <div class="year">c. {info.year}</div>
 {/if}
 </article>
