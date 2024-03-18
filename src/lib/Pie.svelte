@@ -18,16 +18,16 @@
 // 	}
 // }
 
-//     let arcData = [];
-//     let arcs = [];
+    let arcData = [];
+    let arcs = [];
 
-    // $: {
-    //     let arcGenerator = d3.arc().innerRadius(0).outerRadius(50);
-    //     let sliceGenerator = d3.pie().value(d => d.value);
-    //     arcData = sliceGenerator(data);
-    //     arcs = arcData.map(d => arcGenerator(d));
-    //     console.log(arcs);
-    // }
+    $: {
+        let arcGenerator = d3.arc().innerRadius(0).outerRadius(50);
+        let sliceGenerator = d3.pie().value(d => d.value);
+        arcData = sliceGenerator(data);
+        arcs = arcData.map(d => arcGenerator(d));
+        console.log(arcs);
+    }
 
 </script>
 
