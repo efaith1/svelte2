@@ -5,7 +5,7 @@
     export let selectedIndex = -1;
 
     let colors = d3.scaleOrdinal(d3.schemeTableau10);
-    let index = 0;
+    let index = -1;
 
     selectedIndex = selectedIndex === index ? -1 : index;
 
