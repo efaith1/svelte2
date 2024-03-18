@@ -3,27 +3,56 @@
     import Project from "$lib/Project.svelte";
     import Pie from '$lib/Pie.svelte';
 
-    let pieData = rolledData.map(([year, count]) => {
-	return { value: count, label: year };
+    let pieData;
+    let query = "";
+    let filteredProjects;
+    let selectedYearIndex = -1;
+    let selectedYear;
+    let filteredByYear;
+
+    $: {
+        filteredByYear = filteredProjects.filter(project => {
+            return selectedYear ? project.year === selectedYear : true;
+        });
+    }
+    $: selectedYear = selectedYearIndex > -1 ? pieData[selectedYearIndex].label : null;
+
+
+        // MAKE THE SEARCH CASE-INSENSITIVE
+    $: filteredProjects = projects.filter(project => {
+        if (query) {
+            return project.title.toLowerCase().includes(query.toLowerCase());
+        }
+
+        return true;
     });
 
-    let rolledData = d3.rollups(projects, v => v.length, d => d.year);
-    let query = "";
+    // SEARCH ACROSS ALL PROJECT METADATA, NOT JUST TITLES
+    $: filteredProjects = projects.filter(project => {
+        let values = Object.values(project).join("\n").toLowerCase();
+        return values.includes(query.toLowerCase());
+    });
 
-
+     // CALCULATE pieData BASED ON filteredProjects
+     $: {
+        let rolledData = d3.rollups(filteredProjects, v => v.length, d => d.year);
+        pieData = rolledData.map(([year, count]) => {
+            return { value: count, label: year };
+        });
+    }
 </script>
 
-<h1>{projects.length} Projects </h1>
+<h1>{filteredProjects.length} Projects </h1>
 <svelte:head>
     <title>Projects</title>
 </svelte:head>
 
-<Pie data={pieData} />
+<Pie data={pieData} bind:selectedIndex={selectedYearIndex} />
 <input type="search" bind:value={query}
        aria-label="Search projects" placeholder="🔍 Search projects…" />
 
 <div class="projects">
-    {#each projects as p}
+    {#each filteredByYear as p}
         <Project info={p} />        
     {/each}
 </div>
