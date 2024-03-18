@@ -51,8 +51,8 @@
                 {d.label} <em>({d.value})</em>
             </li>
         {/each}
-    </ul>
-</div> -->
+    </ul> -->
+</div>
 
 <style>
     svg {
