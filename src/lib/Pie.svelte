@@ -44,7 +44,7 @@
 
     </svg>
     
-    <ul class="legend">
+    <!-- <ul class="legend">
         {#each data as d, index}
             <li style="--color: { colors(index) }">
                 <span class="swatch"></span>
@@ -52,7 +52,7 @@
             </li>
         {/each}
     </ul>
-</div>
+</div> -->
 
 <style>
     svg {
