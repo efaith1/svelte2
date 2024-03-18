@@ -10,7 +10,7 @@
 
     let colors = d3.scaleOrdinal(d3.schemeTableau10);
 
-    selectedIndex = selectedIndex === index ? -1 : index;
+    // selectedIndex = selectedIndex === index ? -1 : index;
 
 //     function toggleWedge (index, event) {
 // 	if (!event.key || event.key === "Enter") {
