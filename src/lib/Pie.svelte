@@ -8,25 +8,26 @@
     export let data = [];
     export let selectedIndex = -1;
 
-    let colors = d3.scaleOrdinal(d3.schemeTableau10);
+//     let colors = d3.scaleOrdinal(d3.schemeTableau10);
 
-    selectedIndex = selectedIndex === index ? -1 : index;
+//     selectedIndex = selectedIndex === index ? -1 : index;
 
-    function toggleWedge (index, event) {
-	if (!event.key || event.key === "Enter") {
-		selectedIndex = index;
-	}
-}
+//     function toggleWedge (index, event) {
+// 	if (!event.key || event.key === "Enter") {
+// 		selectedIndex = index;
+// 	}
+// }
 
-    let arcData = [];
-    let arcs = [];
+//     let arcData = [];
+//     let arcs = [];
 
-    $: {
-        let arcGenerator = d3.arc().innerRadius(0).outerRadius(50);
-        let sliceGenerator = d3.pie().value(d => d.value);
-        arcData = sliceGenerator(data);
-        arcs = arcData.map(d => arcGenerator(d));
-    }
+    // $: {
+    //     let arcGenerator = d3.arc().innerRadius(0).outerRadius(50);
+    //     let sliceGenerator = d3.pie().value(d => d.value);
+    //     arcData = sliceGenerator(data);
+    //     arcs = arcData.map(d => arcGenerator(d));
+    //     console.log(arcs);
+    // }
 
 </script>
 
