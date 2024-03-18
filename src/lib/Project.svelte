@@ -1,8 +1,6 @@
 <script>
     export let info = {};
     export let hLevel = 2; 
-
-    let p = info;
 </script>
 
 <style>
@@ -10,6 +8,11 @@
     display: grid;
     grid-template-rows: subgrid; 
     grid-row: span 3; 
+    }
+    .year {
+        font-family: Baskerville, serif;
+        font-variant-numeric: oldstyle-nums;
+        margin-top: 10px; 
     }
 </style>
 
@@ -19,4 +22,7 @@
 </a>
 <img src={info.image} alt="">
 <p>{info.description}</p>
+{#if info.year}
+    <div class="year">{info.year}</div>
+{/if}
 </article>
