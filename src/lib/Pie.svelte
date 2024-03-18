@@ -84,6 +84,7 @@
         border: 1px solid #ccc; 
         padding: 10px; 
         margin: 0; 
+        flex: 1;
     }
 
     .legend li {
@@ -101,7 +102,7 @@
 
     .container {
         display: flex; 
-        align-items: center; 
-        justify-content: space-between; 
+        /* align-items: center; 
+        justify-content: center;  */
     }
 </style>

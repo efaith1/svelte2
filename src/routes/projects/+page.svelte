@@ -11,13 +11,6 @@
     let selectedYear;
     let filteredByYear;
 
-    $: {
-        filteredByYear = filteredProjects.filter(project => {
-            return selectedYear ? project.year === selectedYear : true;
-        });
-    }
-    $: selectedYear = selectedYearIndex > -1 ? pieData[selectedYearIndex].label : null;
-
 
         // MAKE THE SEARCH CASE-INSENSITIVE
     $: filteredProjects = projects.filter(project => {
@@ -41,6 +34,14 @@
             return { value: count, label: year };
         });
     }
+
+    $: selectedYear = selectedYearIndex > -1 ? pieData[selectedYearIndex].label : null;
+
+$: {
+    filteredByYear = filteredProjects.filter(project => {
+        return selectedYear ? project.year === selectedYear : true;
+    });
+}
 </script>
 
 <h1>{filteredProjects.length} Projects </h1>
