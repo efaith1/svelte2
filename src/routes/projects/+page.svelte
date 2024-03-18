@@ -49,6 +49,7 @@
 </svelte:head>
 
 <Pie data={pieData} bind:selectedIndex={selectedYearIndex} />
+
 <input type="search" bind:value={query}
        aria-label="Search projects" placeholder="🔍 Search projects…" />
 
