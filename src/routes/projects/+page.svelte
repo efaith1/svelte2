@@ -2,6 +2,7 @@
     import projects from '$lib/projects.json';
     import Project from "$lib/Project.svelte";
     import Pie from '$lib/Pie.svelte';
+    import * as d3 from 'd3';
 
     let pieData;
     let query = "";
