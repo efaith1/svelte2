@@ -85,6 +85,7 @@
         padding: 10px; 
         margin: 0; 
         flex: 1;
+        margin-left: 10px;
     }
 
     .legend li {
