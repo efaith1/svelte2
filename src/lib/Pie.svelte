@@ -34,10 +34,13 @@
 <div class="container">
 
     <svg viewBox="-50 -50 100 100">
-        {#each arcs as arc, index}
+        <!-- {#each arcs as arc, index}
             <path d={arc} fill={ colors(index) }
                 class:selected={selectedIndex === index}
                 on:click={e => toggleWedge(index, e)} on:keyup={e => toggleWedge(index, e)} tabindex="0" role="button" aria-label="Select Wedge"/>
+        {/each} -->
+        {#each arcs as arc}
+            <path d={arc} fill="red" />
         {/each}
 
     </svg>
