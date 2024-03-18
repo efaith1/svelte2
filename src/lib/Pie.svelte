@@ -26,6 +26,7 @@
         let sliceGenerator = d3.pie().value(d => d.value);
         arcData = sliceGenerator(data);
         arcs = arcData.map(d => arcGenerator(d));
+        console.log(arcs);
     }
 
 </script>
