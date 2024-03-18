@@ -1,7 +1,3 @@
-<div>
-    <p>Hello from Pie.svelte</p>
-  </div>
-
 <script>
     import * as d3 from 'd3';
 
@@ -9,14 +5,15 @@
     export let selectedIndex = -1;
 
     let colors = d3.scaleOrdinal(d3.schemeTableau10);
+    let index = 0;
 
-    // selectedIndex = selectedIndex === index ? -1 : index;
+    selectedIndex = selectedIndex === index ? -1 : index;
 
-//     function toggleWedge (index, event) {
-// 	if (!event.key || event.key === "Enter") {
-// 		selectedIndex = index;
-// 	}
-// }
+    function toggleWedge (index, event) {
+	if (!event.key || event.key === "Enter") {
+		selectedIndex = index;
+	}
+}
 
     let arcData = [];
     let arcs = [];
@@ -33,25 +30,22 @@
 <div class="container">
 
     <svg viewBox="-50 -50 100 100">
-        <!-- {#each arcs as arc, index}
+        {#each arcs as arc, index}
             <path d={arc} fill={ colors(index) }
                 class:selected={selectedIndex === index}
                 on:click={e => toggleWedge(index, e)} on:keyup={e => toggleWedge(index, e)} tabindex="0" role="button" aria-label="Select Wedge"/>
-        {/each} -->
-        {#each arcs as arc}
-            <path d={arc} fill="red" />
         {/each}
 
     </svg>
     
-    <!-- <ul class="legend">
+    <ul class="legend">
         {#each data as d, index}
             <li style="--color: { colors(index) }">
                 <span class="swatch"></span>
                 {d.label} <em>({d.value})</em>
             </li>
         {/each}
-    </ul> -->
+    </ul>
 </div>
 
 <style>

@@ -58,3 +58,23 @@
         <Project info={p} />        
     {/each}
 </div>
+
+<style>
+    input[type="search"] {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+        outline: none;
+        width: 300px;
+    }
+
+    input[type="search"]:focus {
+        border-color: #007bff; 
+    }
+
+    input[type="search"]::placeholder {
+        color: #999; 
+    }
+</style>
+
