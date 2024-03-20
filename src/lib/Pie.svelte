@@ -5,13 +5,13 @@
     export let selectedIndex = -1;
 
     let colors = d3.scaleOrdinal(d3.schemeTableau10);
-    let index = -1;
+    // let index = -1;
 
-    selectedIndex = selectedIndex === index ? -1 : index;
 
     function toggleWedge (index, event) {
 	if (!event.key || event.key === "Enter") {
-		selectedIndex = index;
+		// selectedIndex = index;
+        selectedIndex = selectedIndex === index ? -1 : index;
 	}
 }
 
