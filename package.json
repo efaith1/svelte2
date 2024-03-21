@@ -4,6 +4,7 @@
 	"private": true,
 	"scripts": {
 		"dev": "vite dev",
+		"prebuild": "npx elocuent -d static,src -o static/loc.csv",
 		"build": "vite build",
 		"preview": "vite preview"
 	},
@@ -13,6 +14,7 @@
 		"@sveltejs/kit": "^2.0.0",
 		"@sveltejs/vite-plugin-svelte": "^3.0.0",
 		"@types/d3": "^7.4.3",
+		"elocuent": "^0.0.1",
 		"svelte": "^5.0.0-next.71",
 		"vite": "^5.0.3"
 	},
