@@ -7,6 +7,7 @@ let pages = {
    "svelte2/projects": "Projects",
    "svelte2/contact" : "Contact",
    "svelte2/resume": "Resume",
+   "svelte2/meta":"Meta",
     "https://github.com/efaith1/Esther-F.-website": "Github"}
 ;
 
