@@ -139,7 +139,7 @@
 
     numFiles = d3.group(data, (d) => d.file).size;
 
-    workByPeriod = d3.rollups(
+    let workByPeriod = d3.rollups(
       data,
       (v) => v.length,
       (d) => d.datetime.toLocaleString("en", { dayPeriod: "short" })
