@@ -242,41 +242,41 @@
     <dt>Date</dt>
     <dd>{hoveredCommit.datetime?.toLocaleString("en", { date: "full" })}</dd>
   </dl>
-  {#if profileData}
-    <dl class="stats">
-      <div>
-        <dt>Total <abbr title="Lines of code">LOC</abbr></dt>
-        <dd>{totalLOC}</dd>
-      </div>
+  <!-- {#if profileData} -->
+  <dl class="stats">
+    <div>
+      <dt>Total <abbr title="Lines of code">LOC</abbr></dt>
+      <dd>{totalLOC}</dd>
+    </div>
 
-      <div>
-        <dt><b>Total Commits</b></dt>
-        <dd>{numCommits}</dd>
-      </div>
-      <div>
-        <dt><b>Files</b></dt>
-        <dd>{numFiles}</dd>
-      </div>
-      <div>
-        <dt><b>Time of Day most work is done</b></dt>
-        <dd>{maxPeriod}</dd>
-      </div>
-      <div>
-        <dt>Total Authors</dt>
-        <dd>
-          {authors}
-        </dd>
-      </div>
-      <div>
-        <dt>Lines edited</dt>
-        <dd>
-          {totalLinesEdited}
-        </dd>
-      </div>
-    </dl>
-  {:else}
+    <div>
+      <dt><b>Total Commits</b></dt>
+      <dd>{numCommits}</dd>
+    </div>
+    <div>
+      <dt><b>Files</b></dt>
+      <dd>{numFiles}</dd>
+    </div>
+    <div>
+      <dt><b>Time of Day most work is done</b></dt>
+      <dd>{maxPeriod}</dd>
+    </div>
+    <div>
+      <dt>Total Authors</dt>
+      <dd>
+        {authors}
+      </dd>
+    </div>
+    <div>
+      <dt>Lines edited</dt>
+      <dd>
+        {totalLinesEdited}
+      </dd>
+    </div>
+  </dl>
+  <!-- {:else}
     <p>Nothing to show...</p>
-  {/if}
+  {/if} -->
 </section>
 
 <style>
