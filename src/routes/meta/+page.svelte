@@ -85,13 +85,6 @@
   //   );
   // }
 
-  // $: workByPeriod = d3.rollups(
-  //   data,
-  //   (v) => v.length,
-  //   (d) => d.datetime.toLocaleString("en", { dayPeriod: "short" })
-  // );
-  // $: maxPeriod = d3.greatest(workByPeriod, (d) => d[1])?.[0];
-
   onMount(async () => {
     data = await d3.csv("loc.csv", (row) => ({
       ...row,
@@ -101,8 +94,6 @@
       date: new Date(row.date + "T00:00" + row.timezone),
       datetime: new Date(row.datetime),
     }));
-
-    console.log("data", data);
 
     commits = d3
       .groups(data, (d) => d.commit)
@@ -160,7 +151,6 @@
       .domain([0, 24])
       .range([usableArea.bottom, usableArea.top]);
 
-    console.log("whaaaaaaat");
     xAxis = d3.axisBottom(xScale);
     yAxis = d3
       .axisLeft(yScale)
@@ -170,6 +160,8 @@
       .axisLeft(yScale)
       .tickFormat("")
       .tickSize(-usableArea.width);
+
+    console.log("my axes", xAxis);
 
     // Step 2.3: Adding horizontal grid lines
     d3.select(yAxisGridlines).call(yAxisGridlines);
