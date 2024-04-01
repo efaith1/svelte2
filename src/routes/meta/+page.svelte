@@ -11,6 +11,7 @@
   let maxPeriod = "";
   let authors = 0;
   let totalLinesEdited = 0;
+  let svg;
 
   let width = 1000,
     height = 600;
@@ -39,6 +40,19 @@
   }
 
   let cursor = { x: 0, y: 0 };
+
+  async function dotInteraction(index, evt) {
+    if (evt.type === "mouseenter" || evt.type === "focus") {
+      hoveredIndex = index;
+      let hoveredDot = evt.target;
+      tooltipPosition = await computePosition(hoveredDot, commitTooltip, {
+        strategy: "fixed",
+        middleware: [offset(5), autoPlacement()],
+      });
+    } else if (evt.type === "mouseleave" || evt.type === "blur") {
+      hoveredIndex = -1;
+    }
+  }
 
   $: {
     d3.select(svg).call(d3.brush().on("start brush end", brushed));
@@ -163,18 +177,6 @@
     console.log("commitsss please", commits);
   });
 
-  async function dotInteraction(index, evt) {
-    if (evt.type === "mouseenter" || evt.type === "focus") {
-      hoveredIndex = index;
-      let hoveredDot = evt.target;
-      tooltipPosition = await computePosition(hoveredDot, commitTooltip, {
-        strategy: "fixed",
-        middleware: [offset(5), autoPlacement()],
-      });
-    } else if (evt.type === "mouseleave" || evt.type === "blur") {
-      hoveredIndex = -1;
-    }
-  }
   function isCommitSelected(commit) {
     if (!brushSelection) {
       return false;
