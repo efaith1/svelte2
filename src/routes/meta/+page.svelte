@@ -146,6 +146,7 @@
       .domain([0, 24])
       .range([usableArea.bottom, usableArea.top]);
 
+    console.log("whaaaaaaat");
     xAxis = d3.axisBottom(xScale);
     yAxis = d3
       .axisLeft(yScale)
@@ -159,7 +160,7 @@
     // Step 2.3: Adding horizontal grid lines
     d3.select(yAxisGridlines).call(yAxisGridlines);
 
-    console.log("commits", commits);
+    console.log("commitsss please", commits);
   });
 
   async function dotInteraction(index, evt) {
@@ -174,15 +175,14 @@
       hoveredIndex = -1;
     }
   }
-
-  function isCommitSelected(commit) {
-    if (!brushSelection) {
-      return false;
-    }
-    const [[x0, y0], [x1, y1]] = brushSelection;
-    const [xScale, yScale] = [xScale(commit.datetime), yScale(commit.hourFrac)];
-    return xScale >= x0 && xScale <= x1 && yScale >= y0 && yScale <= y1;
-  }
+  // function isCommitSelected(commit) {
+  //   if (!brushSelection) {
+  //     return false;
+  //   }
+  //   const [[x0, y0], [x1, y1]] = brushSelection;
+  //   const [xScale, yScale] = [xScale(commit.datetime), yScale(commit.hourFrac)];
+  //   return xScale >= x0 && xScale <= x1 && yScale >= y0 && yScale <= y1;
+  // }
 </script>
 
 <h1>Meta</h1>
@@ -209,7 +209,7 @@
 
   <g class="dots">
     {#each commits as commit, index}
-      <circle
+      <!-- <circle
         cx={xScale(commit.datetime)}
         cy={yScale(commit.hourFrac)}
         r="5"
@@ -222,7 +222,7 @@
         on:mouseleave={(evt) => dotInteraction(index, evt)}
         on:focus={(evt) => dotInteraction(index, evt)}
         on:blur={(evt) => dotInteraction(index, evt)}
-      />
+      /> -->
     {/each}
   </g>
 </svg>
