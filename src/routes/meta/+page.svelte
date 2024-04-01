@@ -38,15 +38,6 @@
     brushSelection = evt.selection;
   }
 
-  function isCommitSelected(commit) {
-    if (!brushSelection) {
-      return false;
-    }
-    const [[x0, y0], [x1, y1]] = brushSelection;
-    const [xScale, yScale] = [xScale(commit.datetime), yScale(commit.hourFrac)];
-    return xScale >= x0 && xScale <= x1 && yScale >= y0 && yScale <= y1;
-  }
-
   let cursor = { x: 0, y: 0 };
 
   $: {
@@ -182,6 +173,15 @@
     } else if (evt.type === "mouseleave" || evt.type === "blur") {
       hoveredIndex = -1;
     }
+  }
+
+  function isCommitSelected(commit) {
+    if (!brushSelection) {
+      return false;
+    }
+    const [[x0, y0], [x1, y1]] = brushSelection;
+    const [xScale, yScale] = [xScale(commit.datetime), yScale(commit.hourFrac)];
+    return xScale >= x0 && xScale <= x1 && yScale >= y0 && yScale <= y1;
   }
 </script>
 
