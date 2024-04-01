@@ -175,14 +175,14 @@
       hoveredIndex = -1;
     }
   }
-  // function isCommitSelected(commit) {
-  //   if (!brushSelection) {
-  //     return false;
-  //   }
-  //   const [[x0, y0], [x1, y1]] = brushSelection;
-  //   const [xScale, yScale] = [xScale(commit.datetime), yScale(commit.hourFrac)];
-  //   return xScale >= x0 && xScale <= x1 && yScale >= y0 && yScale <= y1;
-  // }
+  function isCommitSelected(commit) {
+    if (!brushSelection) {
+      return false;
+    }
+    const [[x0, y0], [x1, y1]] = brushSelection;
+    const [xScale, yScale] = [xScale(commit.datetime), yScale(commit.hourFrac)];
+    return xScale >= x0 && xScale <= x1 && yScale >= y0 && yScale <= y1;
+  }
 </script>
 
 <h1>Meta</h1>
@@ -190,7 +190,7 @@
   <title>Meta</title>
 </svelte:head>
 
-<svg viewBox="0 0 {width} {height}">
+<svg viewBox="0 0 {width} {height}" bind:this={svg}>
   <g
     class="x-axis"
     transform="translate(0, {usableArea.bottom})"
@@ -209,7 +209,7 @@
 
   <g class="dots">
     {#each commits as commit, index}
-      <!-- <circle
+      <circle
         cx={xScale(commit.datetime)}
         cy={yScale(commit.hourFrac)}
         r="5"
@@ -222,7 +222,7 @@
         on:mouseleave={(evt) => dotInteraction(index, evt)}
         on:focus={(evt) => dotInteraction(index, evt)}
         on:blur={(evt) => dotInteraction(index, evt)}
-      /> -->
+      />
     {/each}
   </g>
 </svg>
