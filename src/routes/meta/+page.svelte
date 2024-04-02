@@ -55,6 +55,18 @@
   }
 
   // $: hoveredCommit = commits[hoveredIndex] ?? {};
+  $: {
+    d3.select(svg).call(d3.brush().on("start brush end", brushed));
+    d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
+    tooltipPosition = cursor;
+    selectedCommits = brushSelection ? commits.filter(isCommitSelected) : [];
+    hasSelection = brushSelection && selectedCommits.length > 0;
+  }
+
+  onMount(() => {
+    d3.select(svg).call(d3.brush().on("start brush end", brushed));
+    d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
+  });
 
   onMount(async () => {
     data = await d3.csv("loc.csv", (row) => ({
@@ -121,15 +133,6 @@
       .domain([0, 24])
       .range([usableArea.bottom, usableArea.top]);
 
-    // xAxis = d3.axisBottom(xScale);
-    // yAxis = d3
-    //   .axisLeft(yScale)
-    //   .tickFormat((d) => String(d % 24).padStart(2, "0") + ":00");
-
-    // yAxisGridlines = d3
-    //   .axisLeft(yScale)
-    //   .tickFormat("")
-    //   .tickSize(-usableArea.width);
     xAxis = d3
       .select(svg)
       .append("g")
@@ -156,31 +159,6 @@
       .call(d3.axisLeft(yScale).tickFormat("").tickSize(-usableArea.width));
   });
 
-  $: {
-    // d3.select(xAxis).call(d3.axisBottom(xScale));
-
-    // d3.select(yAxis).call(
-    //   d3
-    //     .axisLeft(yScale)
-    //     .tickFormat((d) => String(d % 24).padStart(2, "0") + ":00")
-    // );
-
-    // d3.select(yAxisGridlines).call(
-    //   d3.axisLeft(yScale).tickFormat("").tickSize(-usableArea.width)
-    // );
-
-    d3.select(svg).call(d3.brush().on("start brush end", brushed));
-    d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
-    tooltipPosition = cursor;
-    selectedCommits = brushSelection ? commits.filter(isCommitSelected) : [];
-    hasSelection = brushSelection && selectedCommits.length > 0;
-  }
-
-  onMount(() => {
-    d3.select(svg).call(d3.brush().on("start brush end", brushed));
-    d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
-  });
-
   function isCommitSelected(commit) {
     if (!brushSelection) {
       return false;
@@ -198,22 +176,6 @@
 
 <h2>Commits by time of day</h2>
 <svg viewBox="0 0 {width} {height}" bind:this={svg}>
-  <!-- <g
-    class="x-axis"
-    transform={`translate(0, ${usableArea.bottom})`}
-    bind:this={xAxis}
-  />
-  <g
-    class="y-axis"
-    transform={`translate(${usableArea.left}, 0)`}
-    bind:this={yAxis}
-  />
-  <g
-    class="gridlines"
-    transform={`translate(${usableArea.left}, 0)`}
-    bind:this={yAxisGridlines}
-  /> -->
-
   <g class="dots">
     {#each commits as commit, index}
       <circle
@@ -305,12 +267,15 @@
     grid-row: 1 / span 2;
     padding: 5px;
   }
+
   svg {
     overflow: visible;
   }
+
   .gridlines {
-    stroke-opacity: 0.2;
+    stroke-opacity: 0.2 !important;
   }
+
   dl.info {
     background-color: white;
     border-radius: 5px;
