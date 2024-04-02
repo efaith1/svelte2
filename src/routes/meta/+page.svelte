@@ -137,6 +137,24 @@
     }
     d3.select(svg).call(d3.brush().on("start brush end", brushed));
     d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
+
+    function isCommitSelected(commit) {
+      // where is this defined
+
+      if (brushSelection.length === 0) {
+        console.log("Brush selection is empty in iscommitselected");
+        return false;
+      }
+      let min = { x: brushSelection[0], y: brushSelection[0] };
+      let max = { x: brushSelection[1], y: brushSelection[1] };
+      let x = xScale(commit.date);
+      let y = yScale(commit.hourFrac);
+      console.log(
+        "returned value",
+        x >= min.x && x <= max.x && y >= min.y && y <= max.y
+      );
+      return x >= min.x && x <= max.x && y >= min.y && y <= max.y;
+    }
   });
 
   async function dotInteraction(index, evt) {
@@ -153,24 +171,6 @@
   }
 
   $: hoveredCommit = commits[hoveredIndex] ?? {};
-
-  function isCommitSelected(commit) {
-    // where is this defined
-
-    if (brushSelection.length === 0) {
-      console.log("Brush selection is empty in iscommitselected");
-      return false;
-    }
-    let min = { x: brushSelection[0], y: brushSelection[0] };
-    let max = { x: brushSelection[1], y: brushSelection[1] };
-    let x = xScale(commit.date);
-    let y = yScale(commit.hourFrac);
-    console.log(
-      "returned value",
-      x >= min.x && x <= max.x && y >= min.y && y <= max.y
-    );
-    return x >= min.x && x <= max.x && y >= min.y && y <= max.y;
-  }
 
   $: selectedCommits = brushSelection ? commits.filter(isCommitSelected) : [];
   $: hasSelection = brushSelection && selectedCommits.length > 0;
