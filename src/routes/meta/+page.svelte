@@ -55,8 +55,6 @@
     d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
   });
 
-  $: hoveredCommit = commits[hoveredIndex] ?? {};
-
   onMount(async () => {
     data = await d3.csv("loc.csv", (row) => ({
       ...row,
@@ -156,10 +154,14 @@
         strategy: "fixed",
         middleware: [offset(5), autoPlacement()],
       });
+      console.log("hoverindex before", hoveredIndex);
     } else if (evt.type === "mouseleave" || evt.type === "blur") {
       hoveredIndex = -1;
+      console.log("hoverindex after", hoveredIndex);
     }
   }
+
+  $: hoveredCommit = commits[hoveredIndex] ?? {};
 
   function isCommitSelected(commit) {
     if (!brushSelection) {
@@ -186,7 +188,7 @@
         r="5"
         fill="steelblue"
         tabindex="0"
-        aria-describedby="commit-tooltip"
+        aria-describedby="tooltip"
         role="tooltip"
         aria-haspopup="true"
         on:mouseenter={(evt) => dotInteraction(index, evt)}
@@ -201,54 +203,42 @@
 <h2>Summary Stats</h2>
 <section>
   <dl
-    id="commit-tooltip"
+    id="tooltip"
     class="info"
     hidden={hoveredIndex === -1}
     style="top: {tooltipPosition.y}px; left: {tooltipPosition.x}px"
   >
-    <div>
-      <dt><b>Commit</b></dt>
-      <dd>
-        <a href={hoveredCommit.url} target="_blank">{hoveredCommit.id}</a>
-      </dd>
-    </div>
-    <div>
-      <dt><b>Date</b></dt>
-      <dd>{hoveredCommit.datetime?.toLocaleString("en", { date: "full" })}</dd>
-    </div>
-  </dl>
-  <dl class="stats">
-    <div>
-      <dt>
-        <b>Total</b> <abbr title="Lines of code"><b>lines of code</b></abbr>
-      </dt>
-      <dd>{totalLOC}</dd>
-    </div>
+    <dt><b>Commit</b></dt>
+    <dd>
+      <a href={hoveredCommit.url} target="_blank">{hoveredCommit.id}</a>
+    </dd>
 
-    <div>
-      <dt><b>Total Commits</b></dt>
-      <dd>{numCommits}</dd>
-    </div>
-    <div>
-      <dt><b>Files</b></dt>
-      <dd>{numFiles}</dd>
-    </div>
-    <div>
-      <dt><b>Time of Day most work is done</b></dt>
-      <dd>{maxPeriod}</dd>
-    </div>
-    <div>
-      <dt><b>Total Authors</b></dt>
-      <dd>
-        {authors}
-      </dd>
-    </div>
-    <div>
-      <dt><b>Lines edited</b></dt>
-      <dd>
-        {totalLinesEdited}
-      </dd>
-    </div>
+    <dt><b>Date</b></dt>
+    <dd>{hoveredCommit.datetime?.toLocaleString("en", { date: "full" })}</dd>
+
+    <dt>
+      <b>Total</b> <abbr title="Lines of code"><b>lines of code</b></abbr>
+    </dt>
+    <dd>{totalLOC}</dd>
+
+    <dt><b>Total Commits</b></dt>
+    <dd>{numCommits}</dd>
+
+    <dt><b>Files</b></dt>
+    <dd>{numFiles}</dd>
+
+    <dt><b>Time of Day most work is done</b></dt>
+    <dd>{maxPeriod}</dd>
+
+    <dt><b>Total Authors</b></dt>
+    <dd>
+      {authors}
+    </dd>
+
+    <dt><b>Lines edited</b></dt>
+    <dd>
+      {totalLinesEdited}
+    </dd>
   </dl>
 </section>
 
