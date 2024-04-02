@@ -2,6 +2,7 @@
   import * as d3 from "d3";
   import { onMount } from "svelte";
   import { computePosition, autoPlacement, offset } from "@floating-ui/dom";
+  import Pie from "$lib/Pie.svelte";
 
   let data = [];
   let commits = [];
@@ -28,9 +29,11 @@
   let xScale, yScale, xAxis, yAxis, yAxisGridlines;
 
   let hoveredIndex = -1;
-  // let brushSelection = null;
-  // let selectedCommits = [];
-  // let hasSelection = false;
+  let brushSelection = null;
+  let selectedCommits = [];
+  let hasSelection = false;
+  let selectedLines = [];
+  let languageBreakdown = new Map();
 
   let hoveredCommit = {};
   let commitTooltip;
@@ -123,10 +126,9 @@
       .select(svg)
       .append("g")
       .attr("class", "gridlines")
+      .style("opacity", 0.2)
       .attr("transform", `translate(${usableArea.left}, 0)`)
       .call(d3.axisLeft(yScale).tickFormat("").tickSize(-usableArea.width));
-
-    svg.selectAll(".gridlines line").style("opacity", 0.2);
   });
 
   async function dotInteraction(index, evt) {
@@ -142,33 +144,37 @@
     }
   }
 
-  // function brushed(evt) {
-  //   brushSelection = evt.selection;
-  // }
+  $: {
+    d3.select(svg).call(d3.brush().on("start brush end", brushed));
+    d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
 
-  // $: {
-  //   d3.select(svg).call(d3.brush().on("start brush end", brushed));
-  //   d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
-  //   tooltipPosition = cursor;
-  //   selectedCommits = brushSelection ? commits.filter(isCommitSelected) : [];
-  //   hasSelection = brushSelection && selectedCommits.length > 0;
-  // }
-
-  // onMount(() => {
-  //   d3.select(svg).call(d3.brush().on("start brush end", brushed));
-  //   d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
-  // });
+    function brushed(evt) {
+      brushSelection = evt.selection;
+    }
+    selectedCommits = brushSelection ? commits.filter(isCommitSelected) : [];
+    hasSelection = brushSelection && selectedCommits.length > 0;
+    selectedLines = (hasSelection ? selectedCommits : commits).flatMap(
+      (d) => d.lines
+    );
+    languageBreakdown = d3.rollup(
+      selectedLines,
+      (v) => v.length,
+      (d) => d.language
+    );
+  }
 
   $: hoveredCommit = commits[hoveredIndex] ?? {};
 
-  // function isCommitSelected(commit) {
-  //   if (!brushSelection) {
-  //     return false;
-  //   }
-  //   const [[x0, y0], [x1, y1]] = brushSelection;
-  //   const [xScale, yScale] = [xScale(commit.datetime), yScale(commit.hourFrac)];
-  //   return xScale >= x0 && xScale <= x1 && yScale >= y0 && yScale <= y1;
-  // }
+  function isCommitSelected(commit) {
+    if (!brushSelection) {
+      return false;
+    }
+    let min = { x: brushSelection[0], y: brushSelection[0] };
+    let max = { x: brushSelection[1], y: brushSelection[1] };
+    let x = xScale(commit.date);
+    let y = yScale(commit.hourFrac);
+    return x >= min.x && x <= max.x && y >= min.y && y <= max.y;
+  }
 </script>
 
 <h1>Meta</h1>
@@ -197,6 +203,15 @@
     {/each}
   </g>
 </svg>
+
+<p>{hasSelection ? selectedCommits.length : "No"} commits selected</p>
+
+<Pie
+  data={Array.from(languageBreakdown).map(([language, lines]) => ({
+    label: language,
+    value: lines,
+  }))}
+/>
 
 <dl
   id="commit-tooltip"
@@ -288,5 +303,19 @@
 
   circle:hover {
     transform: scale(1.5);
+  }
+
+  @keyframes marching-ants {
+    to {
+      stroke-dashoffset: -8;
+    }
+  }
+
+  svg :global(.selection) {
+    fill-opacity: 10%;
+    stroke: black;
+    stroke-opacity: 70%;
+    stroke-dasharray: 5 3;
+    animation: marching-ants 2s linear infinite;
   }
 </style>
