@@ -130,59 +130,45 @@
       .axisLeft(yScale)
       .tickFormat("")
       .tickSize(-usableArea.width);
-
-    svg = d3.select("svg");
-
-    // svg
-    //   .append("g")
-    //   .attr("class", "x-axis")
-    //   .attr("transform", "translate(0," + usableArea.bottom + ")");
-
-    // svg
-    //   .append("g")
-    //   .attr("class", "y-axis")
-    //   .attr("transform", "translate(" + usableArea.left + ", 0)");
-
-    // svg
-    //   .append("g")
-    //   .attr("class", "gridlines")
-    //   .attr("transform", "translate(" + usableArea.left + ", 0)");
-
-    // svg.select(".x-axis").call(xAxis);
-    // svg.select(".y-axis").call(yAxis);
-    // svg.select(".gridlines").call(yAxisGridlines);
   });
 
-  // $: {
-  //   if (xAxis) {
-  //     svg.select(".x-axis").call(xAxis);
-  //   }
-  //   if (yAxis) {
-  //     svg.select(".y-axis").call(yAxis);
-  //   }
-  //   if (yAxisGridlines) {
-  //     svg.select(".gridlines").call(yAxisGridlines);
-  //   }
-  // }
   $: {
-    d3.select(xAxis).call(d3.axisBottom(xScale));
-
-    d3.select(yAxis).call(
-      d3
-        .axisLeft(yScale)
-        .tickFormat((d) => String(d % 24).padStart(2, "0") + ":00")
-    );
-
-    d3.select(yAxisGridlines).call(
-      d3.axisLeft(yScale).tickFormat("").tickSize(-usableArea.width)
-    );
-
-    // d3.select(svg).call(d3.brush().on("start brush end", brushed));
-    // d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
-    // tooltipPosition = cursor;
-    // selectedCommits = brushSelection ? commits.filter(isCommitSelected) : [];
-    // hasSelection = brushSelection && selectedCommits.length > 0;
+    if (xAxis) {
+      d3.select(xAxis).call(d3.axisBottom(xScale));
+    }
+    if (yAxis) {
+      d3.select(yAxis).call(
+        d3
+          .axisLeft(yScale)
+          .tickFormat((d) => String(d % 24).padStart(2, "0") + ":00")
+      );
+    }
+    if (yAxisGridlines) {
+      d3.select(yAxisGridlines).call(
+        d3.axisLeft(yScale).tickFormat("").tickSize(-usableArea.width)
+      );
+    }
   }
+
+  // $: {
+  //   d3.select(xAxis).call(d3.axisBottom(xScale));
+
+  //   d3.select(yAxis).call(
+  //     d3
+  //       .axisLeft(yScale)
+  //       .tickFormat((d) => String(d % 24).padStart(2, "0") + ":00")
+  //   );
+
+  //   d3.select(yAxisGridlines).call(
+  //     d3.axisLeft(yScale).tickFormat("").tickSize(-usableArea.width)
+  //   );
+
+  // d3.select(svg).call(d3.brush().on("start brush end", brushed));
+  // d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
+  // tooltipPosition = cursor;
+  // selectedCommits = brushSelection ? commits.filter(isCommitSelected) : [];
+  // hasSelection = brushSelection && selectedCommits.length > 0;
+  // }
 
   // onMount(() => {
   //   d3.select(svg).call(d3.brush().on("start brush end", brushed));
