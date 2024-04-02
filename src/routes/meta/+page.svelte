@@ -135,6 +135,17 @@
     }
     d3.select(svg).call(d3.brush().on("start brush end", brushed));
     d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
+    selectedCommits = brushSelection ? commits.filter(isCommitSelected) : [];
+    console.log(selectedCommits);
+    hasSelection = brushSelection && selectedCommits.length > 0;
+    selectedLines = (hasSelection ? selectedCommits : commits).flatMap(
+      (d) => d.lines
+    );
+    languageBreakdown = d3.rollup(
+      selectedLines,
+      (v) => v.length,
+      (d) => d.language
+    );
   });
 
   async function dotInteraction(index, evt) {
@@ -152,19 +163,19 @@
 
   $: hoveredCommit = commits[hoveredIndex] ?? {};
 
-  $: {
-    selectedCommits = brushSelection ? commits.filter(isCommitSelected) : [];
-    console.log(selectedCommits);
-    hasSelection = brushSelection && selectedCommits.length > 0;
-    selectedLines = (hasSelection ? selectedCommits : commits).flatMap(
-      (d) => d.lines
-    );
-    languageBreakdown = d3.rollup(
-      selectedLines,
-      (v) => v.length,
-      (d) => d.language
-    );
-  }
+  // $: {
+  //   selectedCommits = brushSelection ? commits.filter(isCommitSelected) : [];
+  //   console.log(selectedCommits);
+  //   hasSelection = brushSelection && selectedCommits.length > 0;
+  //   selectedLines = (hasSelection ? selectedCommits : commits).flatMap(
+  //     (d) => d.lines
+  //   );
+  //   languageBreakdown = d3.rollup(
+  //     selectedLines,
+  //     (v) => v.length,
+  //     (d) => d.language
+  //   );
+  // }
 
   async function isCommitSelected(commit) {
     if (!brushSelection) {
@@ -192,7 +203,7 @@
         cx={xScale(commit.datetime)}
         cy={yScale(commit.hourFrac)}
         r="5"
-        fill={isCommitSelected(commit) ? "red" : "steelblue"}
+        fill={(await isCommitSelected(commit)) ? "red" : "steelblue"}
         tabindex="0"
         aria-describedby="commit-tooltip"
         role="tooltip"
