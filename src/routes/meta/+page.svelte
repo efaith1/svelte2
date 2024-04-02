@@ -28,13 +28,13 @@
   let xScale, yScale, xAxis, yAxis, yAxisGridlines;
 
   let hoveredIndex = -1;
-  let brushSelection = null;
-  let selectedCommits = [];
+  // let brushSelection = null;
+  // let selectedCommits = [];
   // let hasSelection = false;
 
   let hoveredCommit = {};
   // let commitTooltip;
-  let tooltipPosition = { x: 0, y: 0 };
+  // let tooltipPosition = { x: 0, y: 0 };
 
   let cursor = { x: 0, y: 0 };
 
@@ -145,34 +145,34 @@
   //   }
   // }
 
-  function brushed(evt) {
-    brushSelection = evt.selection;
-  }
+  // function brushed(evt) {
+  //   brushSelection = evt.selection;
+  // }
 
-  $: {
-    d3.select(svg).call(d3.brush().on("start brush end", brushed));
-    d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
-    tooltipPosition = cursor;
-    selectedCommits = brushSelection ? commits.filter(isCommitSelected) : [];
-    hasSelection = brushSelection && selectedCommits.length > 0;
-  }
+  // $: {
+  //   d3.select(svg).call(d3.brush().on("start brush end", brushed));
+  //   d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
+  //   tooltipPosition = cursor;
+  //   selectedCommits = brushSelection ? commits.filter(isCommitSelected) : [];
+  //   hasSelection = brushSelection && selectedCommits.length > 0;
+  // }
 
-  onMount(() => {
-    d3.select(svg).call(d3.brush().on("start brush end", brushed));
-    d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
-  });
+  // onMount(() => {
+  //   d3.select(svg).call(d3.brush().on("start brush end", brushed));
+  //   d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
+  // });
 
   $: hoveredCommit = commits[hoveredIndex] ?? {};
   console.log("hover?", hoveredIndex, hoveredCommit);
 
-  function isCommitSelected(commit) {
-    if (!brushSelection) {
-      return false;
-    }
-    const [[x0, y0], [x1, y1]] = brushSelection;
-    const [xScale, yScale] = [xScale(commit.datetime), yScale(commit.hourFrac)];
-    return xScale >= x0 && xScale <= x1 && yScale >= y0 && yScale <= y1;
-  }
+  // function isCommitSelected(commit) {
+  //   if (!brushSelection) {
+  //     return false;
+  //   }
+  //   const [[x0, y0], [x1, y1]] = brushSelection;
+  //   const [xScale, yScale] = [xScale(commit.datetime), yScale(commit.hourFrac)];
+  //   return xScale >= x0 && xScale <= x1 && yScale >= y0 && yScale <= y1;
+  // }
 </script>
 
 <h1>Meta</h1>
@@ -210,7 +210,7 @@
 <dl
   class="info"
   hidden={hoveredIndex === -1}
-  style="top: {tooltipPosition.y}px; left: {tooltipPosition.x}px"
+  style="top: {cursor.y}px; left: {cursor.x}px"
 >
   <h2>Summary Stats</h2>
 
