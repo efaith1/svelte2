@@ -131,6 +131,13 @@
       .style("opacity", 0.2)
       .attr("transform", `translate(${usableArea.left}, 0)`)
       .call(d3.axisLeft(yScale).tickFormat("").tickSize(-usableArea.width));
+
+    function brushed(evt) {
+      brushSelection = evt.selection || brushSelection;
+    }
+    console.log("in mount", brushSelection);
+    d3.select(svg).call(d3.brush().on("start brush end", brushed));
+    d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
   });
 
   async function dotInteraction(index, evt) {
@@ -149,13 +156,6 @@
   $: hoveredCommit = commits[hoveredIndex] ?? {};
 
   $: {
-    function brushed(evt) {
-      brushSelection = evt.selection || brushSelection;
-    }
-    console.log("in mount", brushSelection);
-    d3.select(svg).call(d3.brush().on("start brush end", brushed));
-    d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
-
     selectedCommits = brushSelection ? commits.filter(isCommitSelected) : [];
     hasSelection = brushSelection && selectedCommits.length > 0;
     selectedLines = (hasSelection ? selectedCommits : commits).flatMap(
