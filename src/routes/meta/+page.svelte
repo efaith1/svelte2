@@ -31,9 +31,12 @@
   let brushSelection = null;
   let selectedCommits = [];
   let hasSelection = false;
-  let hoveredCommit = {};
+
+  // let hoveredCommit = {};
   let commitTooltip;
   let tooltipPosition = { x: 0, y: 0 };
+
+  $: hoveredCommit = commits[hoveredIndex] ?? {};
 
   function brushed(evt) {
     brushSelection = evt.selection;
@@ -54,7 +57,6 @@
     }
   }
 
-  // $: hoveredCommit = commits[hoveredIndex] ?? {};
   $: {
     d3.select(svg).call(d3.brush().on("start brush end", brushed));
     d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
@@ -187,8 +189,11 @@
         aria-describedby="commit-tooltip"
         role="tooltip"
         aria-haspopup="true"
-        on:mouseenter={(evt) => dotInteraction(index, evt)}
-        on:mouseleave={(evt) => dotInteraction(index, evt)}
+        on:mouseenter={(evt) => {
+          hoveredIndex = index;
+          cursor = { x: evt.x, y: evt.y };
+        }}
+        on:mouseleave={(evt) => (hoveredIndex = -1)}
         on:focus={(evt) => dotInteraction(index, evt)}
         on:blur={(evt) => dotInteraction(index, evt)}
       />
@@ -200,7 +205,7 @@
 <section>
   <dl
     id="commit-tooltip"
-    class="info tooltip"
+    class="info"
     hidden={hoveredIndex === -1}
     style="top: {tooltipPosition.y}px; left: {tooltipPosition.x}px"
   >
@@ -214,9 +219,7 @@
       <dt><b>Date</b></dt>
       <dd>{hoveredCommit.datetime?.toLocaleString("en", { date: "full" })}</dd>
     </div>
-  </dl>
 
-  <dl class="stats">
     <div>
       <dt>
         <b>Total</b> <abbr title="Lines of code"><b>lines of code</b></abbr>
@@ -277,24 +280,41 @@
   }
 
   dl.info {
-    background-color: white;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 5px;
+    margin: 0;
+    padding: 10px;
+    background-color: oklch(100% 0% 0 / 80%);
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    padding: 10px;
+    transition-duration: 500ms;
+    transition-property: opacity, visibility;
+
+    &[hidden]:not(:hover, :focus-within) {
+      opacity: 0;
+      visibility: hidden;
+    }
+  }
+
+  dl.info dt {
+    font-weight: bold;
+    color: #666;
+  }
+
+  .tooltip {
+    position: fixed;
+    top: 1em;
+    left: 1em;
+  }
+
+  /* dl.info {
     position: fixed;
     top: 0;
     left: 0;
-    transition-duration: 500ms;
-    transition-property: opacity, visibility;
-  }
+   
+  /* } */
 
-  dl.info[hidden]:not(:hover, :focus-within) {
-    opacity: 0;
-    visibility: hidden;
-  }
-  .tooltip {
-    position: fixed;
-  }
   circle {
     transition: 200ms;
 
