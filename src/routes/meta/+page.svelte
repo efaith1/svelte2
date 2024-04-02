@@ -29,7 +29,7 @@
   let xScale, yScale, xAxis, yAxis, yAxisGridlines;
 
   let hoveredIndex = -1;
-  let brushSelection = [];
+  let brushSelection = null;
   let selectedCommits = [];
   let hasSelection = false;
   let selectedLines = [];
@@ -131,11 +131,11 @@
       .call(d3.axisLeft(yScale).tickFormat("").tickSize(-usableArea.width));
 
     function brushed(evt) {
-      console.log("brushed", evt);
       brushSelection = evt.selection;
     }
     d3.select(svg).call(d3.brush().on("start brush end", brushed));
     d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
+
     selectedCommits = brushSelection ? commits.filter(isCommitSelected) : [];
     hasSelection = brushSelection && selectedCommits.length > 0;
     selectedLines = (hasSelection ? selectedCommits : commits).flatMap(
@@ -215,6 +215,7 @@
   <g class="dots">
     {#each commits as commit, index}
       <circle
+        class="dot {selected(commit)}"
         cx={xScale(commit.datetime)}
         cy={yScale(commit.hourFrac)}
         r="5"
@@ -308,6 +309,10 @@
       opacity: 0;
       visibility: hidden;
     }
+  }
+
+  .dot.selected {
+    fill: red;
   }
 
   .tooltip {
