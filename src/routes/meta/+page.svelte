@@ -32,30 +32,15 @@
   let selectedCommits = [];
   let hasSelection = false;
 
-  // let hoveredCommit = {};
+  let hoveredCommit = {};
   let commitTooltip;
   let tooltipPosition = { x: 0, y: 0 };
-
-  $: hoveredCommit = commits[hoveredIndex] ?? {};
 
   function brushed(evt) {
     brushSelection = evt.selection;
   }
 
   let cursor = { x: 0, y: 0 };
-
-  async function dotInteraction(index, evt) {
-    if (evt.type === "mouseenter" || evt.type === "focus") {
-      hoveredIndex = index;
-      let hoveredDot = evt.target;
-      tooltipPosition = await computePosition(hoveredDot, commitTooltip, {
-        strategy: "fixed",
-        middleware: [offset(5), autoPlacement()],
-      });
-    } else if (evt.type === "mouseleave" || evt.type === "blur") {
-      hoveredIndex = -1;
-    }
-  }
 
   $: {
     d3.select(svg).call(d3.brush().on("start brush end", brushed));
@@ -69,6 +54,8 @@
     d3.select(svg).call(d3.brush().on("start brush end", brushed));
     d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
   });
+
+  $: hoveredCommit = commits[hoveredIndex] ?? {};
 
   onMount(async () => {
     data = await d3.csv("loc.csv", (row) => ({
@@ -161,6 +148,19 @@
       .call(d3.axisLeft(yScale).tickFormat("").tickSize(-usableArea.width));
   });
 
+  async function dotInteraction(index, evt) {
+    if (evt.type === "mouseenter" || evt.type === "focus") {
+      hoveredIndex = index;
+      let hoveredDot = evt.target;
+      tooltipPosition = await computePosition(hoveredDot, commitTooltip, {
+        strategy: "fixed",
+        middleware: [offset(5), autoPlacement()],
+      });
+    } else if (evt.type === "mouseleave" || evt.type === "blur") {
+      hoveredIndex = -1;
+    }
+  }
+
   function isCommitSelected(commit) {
     if (!brushSelection) {
       return false;
@@ -189,11 +189,8 @@
         aria-describedby="commit-tooltip"
         role="tooltip"
         aria-haspopup="true"
-        on:mouseenter={(evt) => {
-          hoveredIndex = index;
-          cursor = { x: evt.x, y: evt.y };
-        }}
-        on:mouseleave={(evt) => (hoveredIndex = -1)}
+        on:mouseenter={(evt) => dotInteraction(index, evt)}
+        on:mouseleave={(evt) => dotInteraction(index, evt)}
         on:focus={(evt) => dotInteraction(index, evt)}
         on:blur={(evt) => dotInteraction(index, evt)}
       />
@@ -290,11 +287,11 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     transition-duration: 500ms;
     transition-property: opacity, visibility;
+  }
 
-    &[hidden]:not(:hover, :focus-within) {
-      opacity: 0;
-      visibility: hidden;
-    }
+  dl.info[hidden]:not(:hover, :focus-within) {
+    opacity: 0;
+    visibility: hidden;
   }
 
   dl.info dt {
@@ -307,13 +304,6 @@
     top: 1em;
     left: 1em;
   }
-
-  /* dl.info {
-    position: fixed;
-    top: 0;
-    left: 0;
-   
-  /* } */
 
   circle {
     transition: 200ms;
