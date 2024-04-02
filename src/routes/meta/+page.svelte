@@ -134,6 +134,16 @@
 
     function brushed(evt) {
       brushSelection = evt.selection;
+      selectedCommits = brushSelection ? commits.filter(isCommitSelected) : [];
+      hasSelection = brushSelection && selectedCommits.length > 0;
+      selectedLines = (hasSelection ? selectedCommits : commits).flatMap(
+        (d) => d.lines
+      );
+      languageBreakdown = d3.rollup(
+        selectedLines,
+        (v) => v.length,
+        (d) => d.language
+      );
     }
     d3.select(svg).call(d3.brush().on("start brush end", brushed));
     d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
