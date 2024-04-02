@@ -133,9 +133,7 @@
       .call(d3.axisLeft(yScale).tickFormat("").tickSize(-usableArea.width));
 
     function brushed(evt) {
-      console.log(evt);
       brushSelection = evt.selection || brushSelection;
-      console.log("brushselection", brushSelection);
     }
     d3.select(svg).call(d3.brush().on("start brush end", brushed));
     d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
@@ -159,13 +157,18 @@
   function isCommitSelected(commit) {
     // where is this defined
 
-    if (!brushSelection) {
+    if (brushSelection.length === 0) {
+      console.log("Brush selection is empty in iscommitselected");
       return false;
     }
     let min = { x: brushSelection[0], y: brushSelection[0] };
     let max = { x: brushSelection[1], y: brushSelection[1] };
     let x = xScale(commit.date);
     let y = yScale(commit.hourFrac);
+    console.log(
+      "returned value",
+      x >= min.x && x <= max.x && y >= min.y && y <= max.y
+    );
     return x >= min.x && x <= max.x && y >= min.y && y <= max.y;
   }
 
@@ -212,9 +215,11 @@
 
 <p>{hasSelection ? selectedCommits.length : "No"} commits selected</p>
 
-{#each Array.from(languageBreakdown) as [language, lines]}
-  <p>{language}: {$format(".1~%")(lines / selectedLines.length)}</p>
-{/each}
+<section>
+  {#each Array.from(languageBreakdown) as [language, lines]}
+    <div>{language}: {$format(".1~%")(lines / selectedLines.length)}</div>
+  {/each}
+</section>
 
 <Pie
   data={Array.from(languageBreakdown).map(([language, lines]) => ({
@@ -317,6 +322,12 @@
 
   circle:hover {
     transform: scale(1.5);
+  }
+
+  section {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
   }
 
   @keyframes marching-ants {
