@@ -34,7 +34,7 @@
 
   let hoveredCommit = {};
   // let commitTooltip;
-  // let tooltipPosition = { x: 0, y: 0 };
+  let tooltipPosition = { x: 0, y: 0 };
 
   let cursor = { x: 0, y: 0 };
 
@@ -129,21 +129,21 @@
       .call(d3.axisLeft(yScale).tickFormat("").tickSize(-usableArea.width));
   });
 
-  // async function dotInteraction(index, evt) {
-  //   // console.log("into dotinteraction func");
-  //   if (evt.type === "mouseenter" || evt.type === "focus") {
-  //     hoveredIndex = index;
-  //     let hoveredDot = evt.target;
-  //     tooltipPosition = await computePosition(hoveredDot, commitTooltip, {
-  //       strategy: "fixed",
-  //       middleware: [offset(5), autoPlacement()],
-  //     });
-  //     console.log("hoverindex before", hoveredIndex);
-  //   } else if (evt.type === "mouseleave" || evt.type === "blur") {
-  //     hoveredIndex = -1;
-  //     console.log("hoverindex after", hoveredIndex);
-  //   }
-  // }
+  async function dotInteraction(index, evt) {
+    // console.log("into dotinteraction func");
+    if (evt.type === "mouseenter" || evt.type === "focus") {
+      hoveredIndex = index;
+      let hoveredDot = evt.target;
+      tooltipPosition = await computePosition(hoveredDot, commitTooltip, {
+        strategy: "fixed",
+        middleware: [offset(5), autoPlacement()],
+      });
+      console.log("hoverindex before", hoveredIndex);
+    } else if (evt.type === "mouseleave" || evt.type === "blur") {
+      hoveredIndex = -1;
+      console.log("hoverindex after", hoveredIndex);
+    }
+  }
 
   // function brushed(evt) {
   //   brushSelection = evt.selection;
@@ -163,7 +163,6 @@
   // });
 
   $: hoveredCommit = commits[hoveredIndex] ?? {};
-  console.log("hover?", hoveredIndex, hoveredCommit);
 
   // function isCommitSelected(commit) {
   //   if (!brushSelection) {
@@ -193,27 +192,20 @@
         aria-describedby="tooltip"
         role="tooltip"
         aria-haspopup="true"
-        on:mouseenter={(evt) => {
-          hoveredIndex = index;
-          cursor = { x: evt.x, y: evt.y };
-        }}
-        on:mouseleave={(evt) => (hoveredIndex = -1)}
+        on:focus={(evt) => dotInteraction(index, evt)}
+        on:blur={(evt) => dotInteraction(index, evt)}
+        on:mouseenter={(evt) => dotInteraction(index, evt)}
+        on:mouseleave={(evt) => dotInteraction(index, evt)}
       />
     {/each}
   </g>
 </svg>
-<!-- on:focus={(evt) => dotInteraction(index, evt)}
-        on:blur={(evt) => dotInteraction(index, evt)} -->
-<!-- on:mouseenter={(evt) => dotInteraction(index, evt)}
-        on:mouseleave={(evt) => dotInteraction(index, evt)} -->
 
 <dl
   class="info"
   hidden={hoveredIndex === -1}
-  style="top: {cursor.y}px; left: {cursor.x}px"
+  style="top: {tooltipPosition.y}px; left: {tooltipPosition.x}px"
 >
-  <h2>Summary Stats</h2>
-
   <dt><b>Commit</b></dt>
   <dd>
     <a href={hoveredCommit.url} target="_blank">{hoveredCommit.id}</a>
@@ -252,10 +244,14 @@
     display: contents;
   }
 
-  dt,
-  dd {
-    grid-row: 1 / span 2;
-    padding: 5px;
+  dl.info dt {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+
+  dl.info dd {
+    margin-bottom: 10px;
+    color: #666;
   }
 
   svg {
@@ -284,17 +280,18 @@
     }
   }
 
-  dl.info dt {
-    font-weight: bold;
-    color: #666;
+  .tooltip {
+    position: fixed;
   }
 
   circle {
-    transition: transform 200ms;
+    transition: 200ms;
+
     &:hover {
       transform: scale(1.5);
-      transform-origin: center;
-      transform-box: fill-box;
     }
+
+    transform-origin: center;
+    transform-box: fill-box;
   }
 </style>
