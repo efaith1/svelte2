@@ -200,13 +200,13 @@
   </g>
 </svg>
 
-<h2>Summary Stats</h2>
 <dl
   id="tooltip"
   class="info"
   hidden={hoveredIndex === -1}
   style="top: {tooltipPosition.y}px; left: {tooltipPosition.x}px"
 >
+  <h2>Summary Stats</h2>
   <dt><b>Commit</b></dt>
   <dd>
     <a href={hoveredCommit.url} target="_blank">{hoveredCommit.id}</a>
