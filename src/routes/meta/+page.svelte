@@ -30,30 +30,13 @@
   let hoveredIndex = -1;
   let brushSelection = null;
   let selectedCommits = [];
-  let hasSelection = false;
+  // let hasSelection = false;
 
   let hoveredCommit = {};
-  let commitTooltip;
+  // let commitTooltip;
   let tooltipPosition = { x: 0, y: 0 };
 
-  function brushed(evt) {
-    brushSelection = evt.selection;
-  }
-
   let cursor = { x: 0, y: 0 };
-
-  $: {
-    d3.select(svg).call(d3.brush().on("start brush end", brushed));
-    d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
-    tooltipPosition = cursor;
-    selectedCommits = brushSelection ? commits.filter(isCommitSelected) : [];
-    hasSelection = brushSelection && selectedCommits.length > 0;
-  }
-
-  onMount(() => {
-    d3.select(svg).call(d3.brush().on("start brush end", brushed));
-    d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
-  });
 
   onMount(async () => {
     data = await d3.csv("loc.csv", (row) => ({
@@ -146,22 +129,41 @@
       .call(d3.axisLeft(yScale).tickFormat("").tickSize(-usableArea.width));
   });
 
-  async function dotInteraction(index, evt) {
-    if (evt.type === "mouseenter" || evt.type === "focus") {
-      hoveredIndex = index;
-      let hoveredDot = evt.target;
-      tooltipPosition = await computePosition(hoveredDot, commitTooltip, {
-        strategy: "fixed",
-        middleware: [offset(5), autoPlacement()],
-      });
-      console.log("hoverindex before", hoveredIndex);
-    } else if (evt.type === "mouseleave" || evt.type === "blur") {
-      hoveredIndex = -1;
-      console.log("hoverindex after", hoveredIndex);
-    }
+  // async function dotInteraction(index, evt) {
+  //   // console.log("into dotinteraction func");
+  //   if (evt.type === "mouseenter" || evt.type === "focus") {
+  //     hoveredIndex = index;
+  //     let hoveredDot = evt.target;
+  //     tooltipPosition = await computePosition(hoveredDot, commitTooltip, {
+  //       strategy: "fixed",
+  //       middleware: [offset(5), autoPlacement()],
+  //     });
+  //     console.log("hoverindex before", hoveredIndex);
+  //   } else if (evt.type === "mouseleave" || evt.type === "blur") {
+  //     hoveredIndex = -1;
+  //     console.log("hoverindex after", hoveredIndex);
+  //   }
+  // }
+
+  function brushed(evt) {
+    brushSelection = evt.selection;
   }
 
+  $: {
+    d3.select(svg).call(d3.brush().on("start brush end", brushed));
+    d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
+    tooltipPosition = cursor;
+    selectedCommits = brushSelection ? commits.filter(isCommitSelected) : [];
+    hasSelection = brushSelection && selectedCommits.length > 0;
+  }
+
+  onMount(() => {
+    d3.select(svg).call(d3.brush().on("start brush end", brushed));
+    d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
+  });
+
   $: hoveredCommit = commits[hoveredIndex] ?? {};
+  console.log("hover?", hoveredIndex, hoveredCommit);
 
   function isCommitSelected(commit) {
     if (!brushSelection) {
@@ -191,22 +193,27 @@
         aria-describedby="tooltip"
         role="tooltip"
         aria-haspopup="true"
-        on:mouseenter={(evt) => dotInteraction(index, evt)}
-        on:mouseleave={(evt) => dotInteraction(index, evt)}
-        on:focus={(evt) => dotInteraction(index, evt)}
-        on:blur={(evt) => dotInteraction(index, evt)}
+        on:mouseenter={(evt) => {
+          hoveredIndex = index;
+          cursor = { x: evt.x, y: evt.y };
+        }}
+        on:mouseleave={(evt) => (hoveredIndex = -1)}
       />
     {/each}
   </g>
 </svg>
+<!-- on:focus={(evt) => dotInteraction(index, evt)}
+        on:blur={(evt) => dotInteraction(index, evt)} -->
+<!-- on:mouseenter={(evt) => dotInteraction(index, evt)}
+        on:mouseleave={(evt) => dotInteraction(index, evt)} -->
 
 <dl
-  id="tooltip"
   class="info"
   hidden={hoveredIndex === -1}
   style="top: {tooltipPosition.y}px; left: {tooltipPosition.x}px"
 >
   <h2>Summary Stats</h2>
+
   <dt><b>Commit</b></dt>
   <dd>
     <a href={hoveredCommit.url} target="_blank">{hoveredCommit.id}</a>
@@ -241,12 +248,6 @@
 </dl>
 
 <style>
-  section {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-  }
-
   dl {
     display: contents;
   }
@@ -276,22 +277,16 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     transition-duration: 500ms;
     transition-property: opacity, visibility;
-  }
 
-  dl.info[hidden]:not(:hover, :focus-within) {
-    opacity: 0;
-    visibility: hidden;
+    &[hidden]:not(:hover, :focus-within) {
+      opacity: 0;
+      visibility: hidden;
+    }
   }
 
   dl.info dt {
     font-weight: bold;
     color: #666;
-  }
-
-  .tooltip {
-    position: fixed;
-    top: 1em;
-    left: 1em;
   }
 
   circle {
