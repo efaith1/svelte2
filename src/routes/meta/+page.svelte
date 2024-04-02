@@ -188,7 +188,7 @@
         r="5"
         fill="steelblue"
         tabindex="0"
-        aria-describedby="tooltip"
+        aria-describedby="commit-tooltip"
         role="tooltip"
         aria-haspopup="true"
         on:focus={(evt) => dotInteraction(index, evt)}
@@ -201,7 +201,8 @@
 </svg>
 
 <dl
-  class="info"
+  id="commit-tooltip"
+  class="info tooltip"
   hidden={hoveredIndex === -1}
   style={`top: ${tooltipPosition.y}px; left: ${tooltipPosition.x}px`}
   bind:this={commitTooltip}
