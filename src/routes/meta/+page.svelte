@@ -131,7 +131,7 @@
       .call(d3.axisLeft(yScale).tickFormat("").tickSize(-usableArea.width));
 
     function brushed(evt) {
-      brushSelection = evt.selection;
+      brushSelection = evt.selection || brushSelection;
     }
     d3.select(svg).call(d3.brush().on("start brush end", brushed));
     d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
@@ -203,7 +203,7 @@
         cx={xScale(commit.datetime)}
         cy={yScale(commit.hourFrac)}
         r="5"
-        fill={(await isCommitSelected(commit)) ? "red" : "steelblue"}
+        fill={isCommitSelected(commit) ? "red" : "steelblue"}
         tabindex="0"
         aria-describedby="commit-tooltip"
         role="tooltip"
