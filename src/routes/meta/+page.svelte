@@ -201,46 +201,44 @@
 </svg>
 
 <h2>Summary Stats</h2>
-<section>
-  <dl
-    id="tooltip"
-    class="info"
-    hidden={hoveredIndex === -1}
-    style="top: {tooltipPosition.y}px; left: {tooltipPosition.x}px"
-  >
-    <dt><b>Commit</b></dt>
-    <dd>
-      <a href={hoveredCommit.url} target="_blank">{hoveredCommit.id}</a>
-    </dd>
+<dl
+  id="tooltip"
+  class="info"
+  hidden={hoveredIndex === -1}
+  style="top: {tooltipPosition.y}px; left: {tooltipPosition.x}px"
+>
+  <dt><b>Commit</b></dt>
+  <dd>
+    <a href={hoveredCommit.url} target="_blank">{hoveredCommit.id}</a>
+  </dd>
 
-    <dt><b>Date</b></dt>
-    <dd>{hoveredCommit.datetime?.toLocaleString("en", { date: "full" })}</dd>
+  <dt><b>Date</b></dt>
+  <dd>{hoveredCommit.datetime?.toLocaleString("en", { date: "full" })}</dd>
 
-    <dt>
-      <b>Total</b> <abbr title="Lines of code"><b>lines of code</b></abbr>
-    </dt>
-    <dd>{totalLOC}</dd>
+  <dt>
+    <b>Total</b> <abbr title="Lines of code"><b>lines of code</b></abbr>
+  </dt>
+  <dd>{totalLOC}</dd>
 
-    <dt><b>Total Commits</b></dt>
-    <dd>{numCommits}</dd>
+  <dt><b>Total Commits</b></dt>
+  <dd>{numCommits}</dd>
 
-    <dt><b>Files</b></dt>
-    <dd>{numFiles}</dd>
+  <dt><b>Files</b></dt>
+  <dd>{numFiles}</dd>
 
-    <dt><b>Time of Day most work is done</b></dt>
-    <dd>{maxPeriod}</dd>
+  <dt><b>Time of Day most work is done</b></dt>
+  <dd>{maxPeriod}</dd>
 
-    <dt><b>Total Authors</b></dt>
-    <dd>
-      {authors}
-    </dd>
+  <dt><b>Total Authors</b></dt>
+  <dd>
+    {authors}
+  </dd>
 
-    <dt><b>Lines edited</b></dt>
-    <dd>
-      {totalLinesEdited}
-    </dd>
-  </dl>
-</section>
+  <dt><b>Lines edited</b></dt>
+  <dd>
+    {totalLinesEdited}
+  </dd>
+</dl>
 
 <style>
   section {
