@@ -119,7 +119,6 @@
           writable: true,
           enumerable: false,
         });
-        console.log("commitsss please", commits);
 
         return ret;
       });
@@ -161,7 +160,7 @@
       .tickFormat("")
       .tickSize(-usableArea.width);
 
-    console.log("my axes", xAxis);
+    console.log("commitsss please", commits);
 
     // Step 2.3: Adding horizontal grid lines
     d3.select(yAxisGridlines).call(yAxisGridlines);
