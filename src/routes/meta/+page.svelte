@@ -121,15 +121,15 @@
       .domain([0, 24])
       .range([usableArea.bottom, usableArea.top]);
 
-    xAxis = d3.axisBottom(xScale);
-    yAxis = d3
-      .axisLeft(yScale)
-      .tickFormat((d) => String(d % 24).padStart(2, "0") + ":00");
+    // xAxis = d3.axisBottom(xScale);
+    // yAxis = d3
+    //   .axisLeft(yScale)
+    //   .tickFormat((d) => String(d % 24).padStart(2, "0") + ":00");
 
-    yAxisGridlines = d3
-      .axisLeft(yScale)
-      .tickFormat("")
-      .tickSize(-usableArea.width);
+    // yAxisGridlines = d3
+    //   .axisLeft(yScale)
+    //   .tickFormat("")
+    //   .tickSize(-usableArea.width);
   });
 
   $: {
@@ -137,30 +137,30 @@
     d3.select(yAxis).call(d3.axisLeft(yScale));
   }
 
-  $: {
-    // d3.select(xAxis).call(d3.axisBottom(xScale));
+  // $: {
+  // d3.select(xAxis).call(d3.axisBottom(xScale));
 
-    // d3.select(yAxis).call(
-    //   d3
-    //     .axisLeft(yScale)
-    //     .tickFormat((d) => String(d % 24).padStart(2, "0") + ":00")
-    // );
+  // d3.select(yAxis).call(
+  //   d3
+  //     .axisLeft(yScale)
+  //     .tickFormat((d) => String(d % 24).padStart(2, "0") + ":00")
+  // );
 
-    // d3.select(yAxisGridlines).call(
-    //   d3.axisLeft(yScale).tickFormat("").tickSize(-usableArea.width)
-    // );
+  // d3.select(yAxisGridlines).call(
+  //   d3.axisLeft(yScale).tickFormat("").tickSize(-usableArea.width)
+  // );
 
-    d3.select(svg).call(d3.brush().on("start brush end", brushed));
-    d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
-    tooltipPosition = cursor;
-    selectedCommits = brushSelection ? commits.filter(isCommitSelected) : [];
-    hasSelection = brushSelection && selectedCommits.length > 0;
-  }
+  //   d3.select(svg).call(d3.brush().on("start brush end", brushed));
+  //   d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
+  //   tooltipPosition = cursor;
+  //   selectedCommits = brushSelection ? commits.filter(isCommitSelected) : [];
+  //   hasSelection = brushSelection && selectedCommits.length > 0;
+  // }
 
-  onMount(() => {
-    d3.select(svg).call(d3.brush().on("start brush end", brushed));
-    d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
-  });
+  // onMount(() => {
+  //   d3.select(svg).call(d3.brush().on("start brush end", brushed));
+  //   d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
+  // });
 
   function isCommitSelected(commit) {
     if (!brushSelection) {
