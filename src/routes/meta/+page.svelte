@@ -135,28 +135,6 @@
     }
     d3.select(svg).call(d3.brush().on("start brush end", brushed));
     d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
-
-    selectedCommits = brushSelection ? commits.filter(isCommitSelected) : [];
-    hasSelection = brushSelection && selectedCommits.length > 0;
-    selectedLines = (hasSelection ? selectedCommits : commits).flatMap(
-      (d) => d.lines
-    );
-    languageBreakdown = d3.rollup(
-      selectedLines,
-      (v) => v.length,
-      (d) => d.language
-    );
-
-    function isCommitSelected(commit) {
-      if (!brushSelection) {
-        return false;
-      }
-      let min = { x: brushSelection[0], y: brushSelection[0] };
-      let max = { x: brushSelection[1], y: brushSelection[1] };
-      let x = xScale(commit.date);
-      let y = yScale(commit.hourFrac);
-      return x >= min.x && x <= max.x && y >= min.y && y <= max.y;
-    }
   });
 
   async function dotInteraction(index, evt) {
@@ -174,35 +152,30 @@
 
   $: hoveredCommit = commits[hoveredIndex] ?? {};
 
-  // $: {
-  //   function brushed(evt) {
-  //     console.log("brushed", evt);
-  //     brushSelection = evt.selection;
-  //   }
-  //   d3.select(svg).call(d3.brush().on("start brush end", brushed));
-  //   d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
-  //   selectedCommits = brushSelection ? commits.filter(isCommitSelected) : [];
-  //   hasSelection = brushSelection && selectedCommits.length > 0;
-  //   selectedLines = (hasSelection ? selectedCommits : commits).flatMap(
-  //     (d) => d.lines
-  //   );
-  //   languageBreakdown = d3.rollup(
-  //     selectedLines,
-  //     (v) => v.length,
-  //     (d) => d.language
-  //   );
-  // }
+  $: {
+    selectedCommits = brushSelection ? commits.filter(isCommitSelected) : [];
+    console.log(selectedCommits);
+    hasSelection = brushSelection && selectedCommits.length > 0;
+    selectedLines = (hasSelection ? selectedCommits : commits).flatMap(
+      (d) => d.lines
+    );
+    languageBreakdown = d3.rollup(
+      selectedLines,
+      (v) => v.length,
+      (d) => d.language
+    );
+  }
 
-  // function isCommitSelected(commit) {
-  //   if (!brushSelection) {
-  //     return false;
-  //   }
-  //   let min = { x: brushSelection[0], y: brushSelection[0] };
-  //   let max = { x: brushSelection[1], y: brushSelection[1] };
-  //   let x = xScale(commit.date);
-  //   let y = yScale(commit.hourFrac);
-  //   return x >= min.x && x <= max.x && y >= min.y && y <= max.y;
-  // }
+  async function isCommitSelected(commit) {
+    if (!brushSelection) {
+      return false;
+    }
+    let min = { x: brushSelection[0], y: brushSelection[0] };
+    let max = { x: brushSelection[1], y: brushSelection[1] };
+    let x = xScale(commit.date);
+    let y = yScale(commit.hourFrac);
+    return x >= min.x && x <= max.x && y >= min.y && y <= max.y;
+  }
 </script>
 
 <h1>Meta</h1>
