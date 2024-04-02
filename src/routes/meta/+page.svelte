@@ -130,8 +130,33 @@
       .attr("transform", `translate(${usableArea.left}, 0)`)
       .call(d3.axisLeft(yScale).tickFormat("").tickSize(-usableArea.width));
 
-    d3.select(svg).call(d3.brush());
+    function brushed(evt) {
+      console.log("brushed", evt);
+      brushSelection = evt.selection;
+    }
+    d3.select(svg).call(d3.brush().on("start brush end", brushed));
     d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
+    selectedCommits = brushSelection ? commits.filter(isCommitSelected) : [];
+    hasSelection = brushSelection && selectedCommits.length > 0;
+    selectedLines = (hasSelection ? selectedCommits : commits).flatMap(
+      (d) => d.lines
+    );
+    languageBreakdown = d3.rollup(
+      selectedLines,
+      (v) => v.length,
+      (d) => d.language
+    );
+
+    function isCommitSelected(commit) {
+      if (!brushSelection) {
+        return false;
+      }
+      let min = { x: brushSelection[0], y: brushSelection[0] };
+      let max = { x: brushSelection[1], y: brushSelection[1] };
+      let x = xScale(commit.date);
+      let y = yScale(commit.hourFrac);
+      return x >= min.x && x <= max.x && y >= min.y && y <= max.y;
+    }
   });
 
   async function dotInteraction(index, evt) {
@@ -148,11 +173,6 @@
   }
 
   $: hoveredCommit = commits[hoveredIndex] ?? {};
-
-  // $: {
-  //   d3.select(svg).call(d3.brush());
-  //   d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
-  // }
 
   // $: {
   //   function brushed(evt) {
@@ -212,14 +232,14 @@
   </g>
 </svg>
 
-<!-- <p>{hasSelection ? selectedCommits.length : "No"} commits selected</p>
+<p>{hasSelection ? selectedCommits.length : "No"} commits selected</p>
 
 <Pie
   data={Array.from(languageBreakdown).map(([language, lines]) => ({
     label: language,
     value: lines,
   }))}
-/> -->
+/>
 
 <dl
   id="commit-tooltip"
