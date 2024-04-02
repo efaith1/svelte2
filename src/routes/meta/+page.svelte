@@ -210,16 +210,16 @@
   <title>Meta</title>
 </svelte:head>
 
-<h2>Commits by time of day</h2>
+<h2>Title: Commits by time of day</h2>
+
 <svg viewBox="0 0 {width} {height}" bind:this={svg}>
   <g class="dots">
     {#each commits as commit, index}
       <circle
-        class="dot {selected(commit)}"
         cx={xScale(commit.datetime)}
         cy={yScale(commit.hourFrac)}
         r="5"
-        fill="steelblue"
+        fill={isCommitSelected(commit) ? "red" : "steelblue"}
         tabindex="0"
         aria-describedby="commit-tooltip"
         role="tooltip"
@@ -309,10 +309,6 @@
       opacity: 0;
       visibility: hidden;
     }
-  }
-
-  .dot.selected {
-    fill: red;
   }
 
   .tooltip {
