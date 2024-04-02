@@ -24,6 +24,7 @@
   };
   usableArea.width = usableArea.right - usableArea.left;
   usableArea.height = usableArea.bottom - usableArea.top;
+
   let xScale, yScale, xAxis, yAxis, yAxisGridlines;
 
   let hoveredIndex = -1;
@@ -66,23 +67,22 @@
     d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
   });
 
-  // $: hoveredCommit = commits[hoveredIndex] ?? {};
+  $: hoveredCommit = commits[hoveredIndex] ?? {};
 
-  // $: {
-  //   d3.select(xAxis).call(d3.axisBottom(xScale));
-  //   // d3.select(yAxis).call(d3.axisLeft(yScale));
-  //   d3.select(yAxis).call(
-  //     d3
-  //       .axisLeft(yScale)
-  //       .tickFormat((d) => String(d % 24).padStart(2, "0") + ":00")
-  //   );
-  // }
+  $: {
+    d3.select(xAxis).call(d3.axisBottom(xScale));
+    d3.select(yAxis).call(
+      d3
+        .axisLeft(yScale)
+        .tickFormat((d) => String(d % 24).padStart(2, "0") + ":00")
+    );
+  }
 
-  // $: {
-  //   d3.select(yAxisGridlines).call(
-  //     d3.axisLeft(yScale).tickFormat("").tickSize(-usableArea.width)
-  //   );
-  // }
+  $: {
+    d3.select(yAxisGridlines).call(
+      d3.axisLeft(yScale).tickFormat("").tickSize(-usableArea.width)
+    );
+  }
 
   onMount(async () => {
     data = await d3.csv("loc.csv", (row) => ({
@@ -143,7 +143,8 @@
     xScale = d3
       .scaleTime()
       .domain(d3.extent(data, (d) => d.datetime))
-      .range([usableArea.left, usableArea.right]);
+      .range([usableArea.left, usableArea.right])
+      .nice();
 
     yScale = d3
       .scaleLinear()
@@ -159,8 +160,6 @@
       .axisLeft(yScale)
       .tickFormat("")
       .tickSize(-usableArea.width);
-
-    console.log("commitsss please", commits);
 
     // Step 2.3: Adding horizontal grid lines
     d3.select(yAxisGridlines).call(yAxisGridlines);
@@ -181,6 +180,7 @@
   <title>Meta</title>
 </svelte:head>
 
+<h2>Commits by time of day</h2>
 <svg viewBox="0 0 {width} {height}" bind:this={svg}>
   <g
     class="x-axis"
@@ -237,9 +237,12 @@
       <dd>{hoveredCommit.datetime?.toLocaleString("en", { date: "full" })}</dd>
     </div>
   </dl>
+
   <dl class="stats">
     <div>
-      <dt><b>Total</b> <abbr title="Lines of code"><b>LOC</b></abbr></dt>
+      <dt>
+        <b>Total</b> <abbr title="Lines of code"><b>lines of code</b></abbr>
+      </dt>
       <dd>{totalLOC}</dd>
     </div>
 
