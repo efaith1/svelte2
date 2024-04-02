@@ -67,22 +67,7 @@
     d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
   });
 
-  $: hoveredCommit = commits[hoveredIndex] ?? {};
-
-  $: {
-    d3.select(xAxis).call(d3.axisBottom(xScale));
-    d3.select(yAxis).call(
-      d3
-        .axisLeft(yScale)
-        .tickFormat((d) => String(d % 24).padStart(2, "0") + ":00")
-    );
-  }
-
-  $: {
-    d3.select(yAxisGridlines).call(
-      d3.axisLeft(yScale).tickFormat("").tickSize(-usableArea.width)
-    );
-  }
+  // $: hoveredCommit = commits[hoveredIndex] ?? {};
 
   onMount(async () => {
     data = await d3.csv("loc.csv", (row) => ({
@@ -160,10 +145,22 @@
       .axisLeft(yScale)
       .tickFormat("")
       .tickSize(-usableArea.width);
-
-    // Step 2.3: Adding horizontal grid lines
-    d3.select(yAxisGridlines).call(yAxisGridlines);
   });
+
+  $: {
+    d3.select(xAxis).call(d3.axisBottom(xScale));
+    d3.select(yAxis).call(
+      d3
+        .axisLeft(yScale)
+        .tickFormat((d) => String(d % 24).padStart(2, "0") + ":00")
+    );
+  }
+
+  $: {
+    d3.select(yAxisGridlines).call(
+      d3.axisLeft(yScale).tickFormat("").tickSize(-usableArea.width)
+    );
+  }
 
   function isCommitSelected(commit) {
     if (!brushSelection) {
