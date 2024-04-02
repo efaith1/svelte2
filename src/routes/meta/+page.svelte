@@ -29,7 +29,7 @@
   let xScale, yScale, xAxis, yAxis, yAxisGridlines;
 
   let hoveredIndex = -1;
-  let brushSelection = null;
+  let brushSelection = [];
   let selectedCommits = [];
   let hasSelection = false;
   let selectedLines = [];
@@ -135,17 +135,6 @@
     }
     d3.select(svg).call(d3.brush().on("start brush end", brushed));
     d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
-    selectedCommits = brushSelection ? commits.filter(isCommitSelected) : [];
-    console.log(selectedCommits);
-    hasSelection = brushSelection && selectedCommits.length > 0;
-    selectedLines = (hasSelection ? selectedCommits : commits).flatMap(
-      (d) => d.lines
-    );
-    languageBreakdown = d3.rollup(
-      selectedLines,
-      (v) => v.length,
-      (d) => d.language
-    );
   });
 
   async function dotInteraction(index, evt) {
@@ -163,21 +152,7 @@
 
   $: hoveredCommit = commits[hoveredIndex] ?? {};
 
-  // $: {
-  //   selectedCommits = brushSelection ? commits.filter(isCommitSelected) : [];
-  //   console.log(selectedCommits);
-  //   hasSelection = brushSelection && selectedCommits.length > 0;
-  //   selectedLines = (hasSelection ? selectedCommits : commits).flatMap(
-  //     (d) => d.lines
-  //   );
-  //   languageBreakdown = d3.rollup(
-  //     selectedLines,
-  //     (v) => v.length,
-  //     (d) => d.language
-  //   );
-  // }
-
-  async function isCommitSelected(commit) {
+  function isCommitSelected(commit) {
     if (!brushSelection) {
       return false;
     }
@@ -187,6 +162,17 @@
     let y = yScale(commit.hourFrac);
     return x >= min.x && x <= max.x && y >= min.y && y <= max.y;
   }
+
+  $: selectedCommits = brushSelection ? commits.filter(isCommitSelected) : [];
+  $: hasSelection = brushSelection && selectedCommits.length > 0;
+  $: selectedLines = (hasSelection ? selectedCommits : commits).flatMap(
+    (d) => d.lines
+  );
+  $: languageBreakdown = d3.rollup(
+    selectedLines,
+    (v) => v.length,
+    (d) => d.language
+  );
 </script>
 
 <h1>Meta</h1>
@@ -200,10 +186,11 @@
   <g class="dots">
     {#each commits as commit, index}
       <circle
+        class:selected-dot={isCommitSelected(commit)}
         cx={xScale(commit.datetime)}
         cy={yScale(commit.hourFrac)}
         r="5"
-        fill={isCommitSelected(commit) ? "red" : "steelblue"}
+        fill="steelblue"
         tabindex="0"
         aria-describedby="commit-tooltip"
         role="tooltip"
@@ -219,12 +206,14 @@
 
 <p>{hasSelection ? selectedCommits.length : "No"} commits selected</p>
 
+<!-- {#each languageBreakdown as [language, lines]} -->
 <Pie
   data={Array.from(languageBreakdown).map(([language, lines]) => ({
     label: language,
     value: lines,
   }))}
 />
+<!-- {/each} -->
 
 <dl
   id="commit-tooltip"
@@ -283,6 +272,10 @@
 
   svg {
     overflow: visible;
+  }
+
+  .selected-dot {
+    fill: red;
   }
 
   dl.info {
