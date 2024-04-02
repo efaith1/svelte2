@@ -194,7 +194,6 @@
   // );
 
   function isCommitSelected(commit) {
-    // where is this defined
     console.log("outside mount", brushSelection);
 
     if (brushSelection.length === 0) {
