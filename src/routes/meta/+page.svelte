@@ -184,8 +184,8 @@
       (v) => v.length,
       (d) => d.language
     );
-    onMount(setup);
   }
+  onMount(setup);
 </script>
 
 <h1>Meta</h1>
