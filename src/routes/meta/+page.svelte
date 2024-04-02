@@ -130,37 +130,56 @@
     //   .axisLeft(yScale)
     //   .tickFormat("")
     //   .tickSize(-usableArea.width);
+    xAxis = d3
+      .select(svg)
+      .append("g")
+      .attr("class", "x-axis")
+      .attr("transform", `translate(0, ${usableArea.bottom})`)
+      .call(d3.axisBottom(xScale));
+
+    yAxis = d3
+      .select(svg)
+      .append("g")
+      .attr("class", "y-axis")
+      .attr("transform", `translate(${usableArea.left}, 0)`)
+      .call(
+        d3
+          .axisLeft(yScale)
+          .tickFormat((d) => String(d % 24).padStart(2, "0") + ":00")
+      );
+
+    yAxisGridlines = d3
+      .select(svg)
+      .append("g")
+      .attr("class", "gridlines")
+      .attr("transform", `translate(${usableArea.left}, 0)`)
+      .call(d3.axisLeft(yScale).tickFormat("").tickSize(-usableArea.width));
   });
 
   $: {
-    d3.select(xAxis).call(d3.axisBottom(xScale));
-    d3.select(yAxis).call(d3.axisLeft(yScale));
+    // d3.select(xAxis).call(d3.axisBottom(xScale));
+
+    // d3.select(yAxis).call(
+    //   d3
+    //     .axisLeft(yScale)
+    //     .tickFormat((d) => String(d % 24).padStart(2, "0") + ":00")
+    // );
+
+    // d3.select(yAxisGridlines).call(
+    //   d3.axisLeft(yScale).tickFormat("").tickSize(-usableArea.width)
+    // );
+
+    d3.select(svg).call(d3.brush().on("start brush end", brushed));
+    d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
+    tooltipPosition = cursor;
+    selectedCommits = brushSelection ? commits.filter(isCommitSelected) : [];
+    hasSelection = brushSelection && selectedCommits.length > 0;
   }
 
-  // $: {
-  // d3.select(xAxis).call(d3.axisBottom(xScale));
-
-  // d3.select(yAxis).call(
-  //   d3
-  //     .axisLeft(yScale)
-  //     .tickFormat((d) => String(d % 24).padStart(2, "0") + ":00")
-  // );
-
-  // d3.select(yAxisGridlines).call(
-  //   d3.axisLeft(yScale).tickFormat("").tickSize(-usableArea.width)
-  // );
-
-  //   d3.select(svg).call(d3.brush().on("start brush end", brushed));
-  //   d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
-  //   tooltipPosition = cursor;
-  //   selectedCommits = brushSelection ? commits.filter(isCommitSelected) : [];
-  //   hasSelection = brushSelection && selectedCommits.length > 0;
-  // }
-
-  // onMount(() => {
-  //   d3.select(svg).call(d3.brush().on("start brush end", brushed));
-  //   d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
-  // });
+  onMount(() => {
+    d3.select(svg).call(d3.brush().on("start brush end", brushed));
+    d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
+  });
 
   function isCommitSelected(commit) {
     if (!brushSelection) {
@@ -179,21 +198,21 @@
 
 <h2>Commits by time of day</h2>
 <svg viewBox="0 0 {width} {height}" bind:this={svg}>
-  <g
+  <!-- <g
     class="x-axis"
-    transform="translate(0, {usableArea.bottom})"
+    transform={`translate(0, ${usableArea.bottom})`}
     bind:this={xAxis}
   />
   <g
     class="y-axis"
-    transform="translate({usableArea.left}, 0)"
+    transform={`translate(${usableArea.left}, 0)`}
     bind:this={yAxis}
   />
   <g
     class="gridlines"
-    transform="translate({usableArea.left}, 0)"
+    transform={`translate(${usableArea.left}, 0)`}
     bind:this={yAxisGridlines}
-  />
+  /> -->
 
   <g class="dots">
     {#each commits as commit, index}
