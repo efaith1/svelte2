@@ -131,13 +131,6 @@
       .style("opacity", 0.2)
       .attr("transform", `translate(${usableArea.left}, 0)`)
       .call(d3.axisLeft(yScale).tickFormat("").tickSize(-usableArea.width));
-
-    function brushed(evt) {
-      brushSelection = evt.selection || brushSelection;
-    }
-    console.log("in mount", brushSelection);
-    d3.select(svg).call(d3.brush().on("start brush end", brushed));
-    d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
   });
 
   async function dotInteraction(index, evt) {
@@ -155,35 +148,44 @@
 
   $: hoveredCommit = commits[hoveredIndex] ?? {};
 
-  function isCommitSelected(commit) {
-    // where is this defined
-    console.log("outside mount", brushSelection);
-
-    if (brushSelection.length === 0) {
-      console.log("Brush selection is empty in iscommitselected");
-      return false;
+  async function setup() {
+    function brushed(evt) {
+      brushSelection = evt.selection || brushSelection;
     }
-    let min = { x: brushSelection[0], y: brushSelection[0] };
-    let max = { x: brushSelection[1], y: brushSelection[1] };
-    let x = xScale(commit.date);
-    let y = yScale(commit.hourFrac);
-    console.log(
-      "returned value",
-      x >= min.x && x <= max.x && y >= min.y && y <= max.y
-    );
-    return x >= min.x && x <= max.x && y >= min.y && y <= max.y;
-  }
+    console.log("in mount", brushSelection);
+    d3.select(svg).call(d3.brush().on("start brush end", brushed));
+    d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
+    function isCommitSelected(commit) {
+      // where is this defined
+      console.log("outside mount", brushSelection);
 
-  $: selectedCommits = brushSelection ? commits.filter(isCommitSelected) : [];
-  $: hasSelection = brushSelection && selectedCommits.length > 0;
-  $: selectedLines = (hasSelection ? selectedCommits : commits).flatMap(
-    (d) => d.lines
-  );
-  $: languageBreakdown = d3.rollup(
-    selectedLines,
-    (v) => v.length,
-    (d) => d.language
-  );
+      if (brushSelection.length === 0) {
+        console.log("Brush selection is empty in iscommitselected");
+        return false;
+      }
+      let min = { x: brushSelection[0], y: brushSelection[0] };
+      let max = { x: brushSelection[1], y: brushSelection[1] };
+      let x = xScale(commit.date);
+      let y = yScale(commit.hourFrac);
+      console.log(
+        "returned value",
+        x >= min.x && x <= max.x && y >= min.y && y <= max.y
+      );
+      return x >= min.x && x <= max.x && y >= min.y && y <= max.y;
+    }
+
+    selectedCommits = brushSelection ? commits.filter(isCommitSelected) : [];
+    hasSelection = brushSelection && selectedCommits.length > 0;
+    selectedLines = (hasSelection ? selectedCommits : commits).flatMap(
+      (d) => d.lines
+    );
+    languageBreakdown = d3.rollup(
+      selectedLines,
+      (v) => v.length,
+      (d) => d.language
+    );
+    onMount(setup);
+  }
 </script>
 
 <h1>Meta</h1>
