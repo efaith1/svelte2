@@ -32,7 +32,7 @@
   let brushSelection = [];
   let selectedCommits = [];
   let hasSelection = false;
-  // let selectedLines = [];
+  let selectedLines = [];
   let languageBreakdown = new Map();
 
   let hoveredCommit = {};
@@ -129,6 +129,9 @@
       .style("opacity", 0.2)
       .attr("transform", `translate(${usableArea.left}, 0)`)
       .call(d3.axisLeft(yScale).tickFormat("").tickSize(-usableArea.width));
+
+    d3.select(svg).call(d3.brush());
+    d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
   });
 
   async function dotInteraction(index, evt) {
@@ -144,10 +147,12 @@
     }
   }
 
-  $: {
-    d3.select(svg).call(d3.brush());
-    d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
-  }
+  $: hoveredCommit = commits[hoveredIndex] ?? {};
+
+  // $: {
+  //   d3.select(svg).call(d3.brush());
+  //   d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
+  // }
 
   // $: {
   //   function brushed(evt) {
@@ -167,8 +172,6 @@
   //     (d) => d.language
   //   );
   // }
-
-  $: hoveredCommit = commits[hoveredIndex] ?? {};
 
   // function isCommitSelected(commit) {
   //   if (!brushSelection) {
