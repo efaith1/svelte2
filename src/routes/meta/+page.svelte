@@ -216,7 +216,8 @@
       <dt><b>Date</b></dt>
       <dd>{hoveredCommit.datetime?.toLocaleString("en", { date: "full" })}</dd>
     </div>
-
+  </dl>
+  <dl class="stats">
     <div>
       <dt>
         <b>Total</b> <abbr title="Lines of code"><b>lines of code</b></abbr>
