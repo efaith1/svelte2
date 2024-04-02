@@ -137,10 +137,8 @@
         strategy: "fixed",
         middleware: [offset(5), autoPlacement()],
       });
-      console.log("hoverindex before", hoveredIndex);
     } else if (evt.type === "mouseleave" || evt.type === "blur") {
       hoveredIndex = -1;
-      console.log("hoverindex after", hoveredIndex);
     }
   }
 
@@ -283,12 +281,12 @@
   }
 
   circle {
-    transition: 200ms;
+    transition: transform 200ms;
     transform-origin: center;
     transform-box: fill-box;
+  }
 
-    &:hover {
-      transform: scale(1.5);
-    }
+  circle:hover {
+    transform: scale(1.5);
   }
 </style>
