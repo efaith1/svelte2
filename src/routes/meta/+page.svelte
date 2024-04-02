@@ -294,8 +294,8 @@
 
     &:hover {
       transform: scale(1.5);
+      transform-origin: center;
+      transform-box: fill-box;
     }
-    transform-origin: center;
-    transform-box: fill-box;
   }
 </style>
