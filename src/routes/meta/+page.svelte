@@ -33,10 +33,8 @@
   // let hasSelection = false;
 
   let hoveredCommit = {};
-  // let commitTooltip;
+  let commitTooltip;
   let tooltipPosition = { x: 0, y: 0 };
-
-  let cursor = { x: 0, y: 0 };
 
   onMount(async () => {
     data = await d3.csv("loc.csv", (row) => ({
@@ -127,10 +125,11 @@
       .attr("class", "gridlines")
       .attr("transform", `translate(${usableArea.left}, 0)`)
       .call(d3.axisLeft(yScale).tickFormat("").tickSize(-usableArea.width));
+
+    svg.selectAll(".gridlines line").style("opacity", 0.2);
   });
 
   async function dotInteraction(index, evt) {
-    // console.log("into dotinteraction func");
     if (evt.type === "mouseenter" || evt.type === "focus") {
       hoveredIndex = index;
       let hoveredDot = evt.target;
@@ -204,7 +203,8 @@
 <dl
   class="info"
   hidden={hoveredIndex === -1}
-  style="top: {tooltipPosition.y}px; left: {tooltipPosition.x}px"
+  style={`top: ${tooltipPosition.y}px; left: ${tooltipPosition.x}px`}
+  bind:this={commitTooltip}
 >
   <dt><b>Commit</b></dt>
   <dd>
@@ -258,19 +258,7 @@
     overflow: visible;
   }
 
-  .gridlines {
-    stroke-opacity: 0.2 !important;
-  }
-
   dl.info {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 5px;
-    margin: 0;
-    padding: 10px;
-    background-color: oklch(100% 0% 0 / 80%);
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     transition-duration: 500ms;
     transition-property: opacity, visibility;
 
@@ -282,16 +270,24 @@
 
   .tooltip {
     position: fixed;
+    display: grid;
+    max-width: fit-content;
+    grid-template-columns: auto 1fr;
+    gap: 5px;
+    margin: 0;
+    padding: 10px;
+    background-color: oklch(100% 0% 0 / 80%);
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   }
 
   circle {
     transition: 200ms;
+    transform-origin: center;
+    transform-box: fill-box;
 
     &:hover {
       transform: scale(1.5);
     }
-
-    transform-origin: center;
-    transform-box: fill-box;
   }
 </style>
