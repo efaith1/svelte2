@@ -2,6 +2,7 @@
   import * as d3 from "d3";
   import { onMount } from "svelte";
   import { computePosition, autoPlacement, offset } from "@floating-ui/dom";
+  import { format } from "d3-format";
   import Pie from "$lib/Pie.svelte";
 
   let data = [];
@@ -30,6 +31,7 @@
 
   let hoveredIndex = -1;
   let brushSelection = [];
+
   let selectedCommits = [];
   let hasSelection = false;
   let selectedLines = [];
@@ -131,7 +133,9 @@
       .call(d3.axisLeft(yScale).tickFormat("").tickSize(-usableArea.width));
 
     function brushed(evt) {
+      console.log(evt);
       brushSelection = evt.selection || brushSelection;
+      console.log("brushselection", brushSelection);
     }
     d3.select(svg).call(d3.brush().on("start brush end", brushed));
     d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
@@ -153,6 +157,8 @@
   $: hoveredCommit = commits[hoveredIndex] ?? {};
 
   function isCommitSelected(commit) {
+    // where is this defined
+
     if (!brushSelection) {
       return false;
     }
@@ -206,14 +212,16 @@
 
 <p>{hasSelection ? selectedCommits.length : "No"} commits selected</p>
 
-<!-- {#each languageBreakdown as [language, lines]} -->
+{#each Array.from(languageBreakdown) as [language, lines]}
+  <p>{language}: {$format(".1~%")(lines / selectedLines.length)}</p>
+{/each}
+
 <Pie
   data={Array.from(languageBreakdown).map(([language, lines]) => ({
     label: language,
     value: lines,
   }))}
 />
-<!-- {/each} -->
 
 <dl
   id="commit-tooltip"
