@@ -155,18 +155,17 @@
 
   $: hoveredCommit = commits[hoveredIndex] ?? {};
 
-  $: {
-    selectedCommits = brushSelection ? commits.filter(isCommitSelected) : [];
-    hasSelection = brushSelection && selectedCommits.length > 0;
-    selectedLines = (hasSelection ? selectedCommits : commits).flatMap(
-      (d) => d.lines
-    );
-    languageBreakdown = d3.rollup(
-      selectedLines,
-      (v) => v.length,
-      (d) => d.language
-    );
-  }
+  $: selectedCommits = brushSelection ? commits.filter(isCommitSelected) : [];
+  $: hasSelection = brushSelection && selectedCommits.length > 0;
+  $: selectedLines = (hasSelection ? selectedCommits : commits).flatMap(
+    (d) => d.lines
+  );
+  $: languageBreakdown = d3.rollup(
+    selectedLines,
+    (v) => v.length,
+    (d) => d.language
+  );
+
   function isCommitSelected(commit) {
     // where is this defined
     console.log("outside mount", brushSelection);
