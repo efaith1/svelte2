@@ -35,7 +35,6 @@
   let tooltipPosition = { x: 0, y: 0 };
 
   function brushed(evt) {
-    console.log(evt);
     brushSelection = evt.selection;
   }
 
@@ -88,7 +87,7 @@
   onMount(async () => {
     data = await d3.csv("loc.csv", (row) => ({
       ...row,
-      line: Number(row.line), // or just +row.line
+      line: Number(row.line),
       depth: Number(row.depth),
       length: Number(row.length),
       date: new Date(row.date + "T00:00" + row.timezone),
@@ -120,6 +119,7 @@
           writable: true,
           enumerable: false,
         });
+        console.log("commitsss please", commits);
 
         return ret;
       });
@@ -165,8 +165,6 @@
 
     // Step 2.3: Adding horizontal grid lines
     d3.select(yAxisGridlines).call(yAxisGridlines);
-
-    console.log("commitsss please", commits);
   });
 
   function isCommitSelected(commit) {
@@ -229,15 +227,20 @@
     hidden={hoveredIndex === -1}
     style="top: {tooltipPosition.y}px; left: {tooltipPosition.x}px"
   >
-    <dt>Commit</dt>
-    <dd><a href={hoveredCommit.url} target="_blank">{hoveredCommit.id}</a></dd>
-    <dt>Date</dt>
-    <dd>{hoveredCommit.datetime?.toLocaleString("en", { date: "full" })}</dd>
+    <div>
+      <dt><b>Commit</b></dt>
+      <dd>
+        <a href={hoveredCommit.url} target="_blank">{hoveredCommit.id}</a>
+      </dd>
+    </div>
+    <div>
+      <dt><b>Date</b></dt>
+      <dd>{hoveredCommit.datetime?.toLocaleString("en", { date: "full" })}</dd>
+    </div>
   </dl>
-  <!-- {#if profileData} -->
   <dl class="stats">
     <div>
-      <dt>Total <abbr title="Lines of code">LOC</abbr></dt>
+      <dt><b>Total</b> <abbr title="Lines of code"><b>LOC</b></abbr></dt>
       <dd>{totalLOC}</dd>
     </div>
 
@@ -254,21 +257,18 @@
       <dd>{maxPeriod}</dd>
     </div>
     <div>
-      <dt>Total Authors</dt>
+      <dt><b>Total Authors</b></dt>
       <dd>
         {authors}
       </dd>
     </div>
     <div>
-      <dt>Lines edited</dt>
+      <dt><b>Lines edited</b></dt>
       <dd>
         {totalLinesEdited}
       </dd>
     </div>
   </dl>
-  <!-- {:else}
-    <p>Nothing to show...</p>
-  {/if} -->
 </section>
 
 <style>
