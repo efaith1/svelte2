@@ -134,7 +134,6 @@
 
     function brushed(evt) {
       brushSelection = evt.selection;
-      console.log("inside mount", brushSelection);
     }
     d3.select(svg).call(d3.brush().on("start brush end", brushed));
     d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
@@ -170,8 +169,6 @@
   );
 
   function isCommitSelected(commit) {
-    console.log("outside mount", brushSelection);
-
     if (brushSelection.length === 0) {
       console.log("Brush selection is empty in iscommitselected");
       return false;
