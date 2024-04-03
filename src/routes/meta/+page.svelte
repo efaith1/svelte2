@@ -170,17 +170,12 @@
 
   function isCommitSelected(commit) {
     if (brushSelection.length === 0) {
-      console.log("Brush selection is empty in iscommitselected");
       return false;
     }
     let min = { x: brushSelection[0][0], y: brushSelection[0][1] };
     let max = { x: brushSelection[1][0], y: brushSelection[1][1] };
     let x = xScale(commit.date);
     let y = yScale(commit.hourFrac);
-    console.log(
-      "returned value",
-      x >= min.x && x <= max.x && y >= min.y && y <= max.y
-    );
     return x >= min.x && x <= max.x && y >= min.y && y <= max.y;
   }
 </script>
