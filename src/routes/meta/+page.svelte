@@ -131,13 +131,6 @@
       .style("opacity", 0.2)
       .attr("transform", `translate(${usableArea.left}, 0)`)
       .call(d3.axisLeft(yScale).tickFormat("").tickSize(-usableArea.width));
-
-    function brushed(evt) {
-      brushSelection = evt.selection;
-      console.log("inside mount", brushSelection);
-    }
-    d3.select(svg).call(d3.brush().on("start brush end", brushed));
-    d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
   });
 
   async function dotInteraction(index, evt) {
@@ -153,6 +146,14 @@
     }
   }
 
+  $: {
+    function brushed(evt) {
+      brushSelection = evt.selection;
+      console.log("inside mount", brushSelection);
+    }
+    d3.select(svg).call(d3.brush().on("start brush end", brushed));
+    d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
+  }
   $: hoveredCommit = commits[hoveredIndex] ?? {};
 
   $: selectedCommits = brushSelection ? commits.filter(isCommitSelected) : [];
@@ -194,16 +195,16 @@
 </svelte:head>
 
 <h2>Title: Commits by time of day</h2>
+<!-- class:selected-dot={isCommitSelected(commit)} -->
 
 <svg viewBox="0 0 {width} {height}" bind:this={svg}>
   <g class="dots">
     {#each commits as commit, index}
       <circle
-        class:selected-dot={isCommitSelected(commit)}
         cx={xScale(commit.datetime)}
         cy={yScale(commit.hourFrac)}
         r="5"
-        fill="steelblue"
+        fill={isCommitSelected(commit) ? "red" : "steelblue"}
         tabindex="0"
         aria-describedby="commit-tooltip"
         role="tooltip"
