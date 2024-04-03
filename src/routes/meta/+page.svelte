@@ -104,7 +104,7 @@
     yScale = d3
       .scaleLinear()
       .domain([0, 24])
-      .range([usableArea.bottom, usableArea.top]);
+      .range([usableArea.top, usableArea.bottom]);
 
     xAxis = d3
       .select(svg)
@@ -194,7 +194,6 @@
 </svelte:head>
 
 <h2>Title: Commits by time of day</h2>
-<!-- class:selected-dot={isCommitSelected(commit)} -->
 
 <svg viewBox="0 0 {width} {height}" bind:this={svg}>
   <g class="dots">
