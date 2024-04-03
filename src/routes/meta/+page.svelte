@@ -199,10 +199,11 @@
   <g class="dots">
     {#each commits as commit, index}
       <circle
+        class:selected={isCommitSelected(commit)}
         cx={xScale(commit.datetime)}
         cy={yScale(commit.hourFrac)}
         r="5"
-        fill={isCommitSelected(commit) ? "red" : "steelblue"}
+        fill="steelblue"
         tabindex="0"
         aria-describedby="commit-tooltip"
         role="tooltip"
@@ -327,6 +328,10 @@
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 10px;
+  }
+
+  .dots circle.selected {
+    fill: red;
   }
 
   @keyframes marching-ants {
