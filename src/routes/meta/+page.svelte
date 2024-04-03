@@ -41,10 +41,6 @@
   let commitTooltip;
   let tooltipPosition = { x: 0, y: 0 };
 
-  $: {
-    d3.select(svg).call(d3.brush().on("start brush end", brushed));
-    d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
-  }
   onMount(async () => {
     data = await d3.csv("loc.csv", (row) => ({
       ...row,
@@ -169,6 +165,11 @@
     (v) => v.length,
     (d) => d.type
   );
+
+  $: {
+    d3.select(svg).call(d3.brush().on("start brush end", brushed));
+    d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
+  }
 
   function isCommitSelected(commit) {
     if (brushSelection.length === 0) {
