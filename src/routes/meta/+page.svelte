@@ -30,7 +30,7 @@
   let xScale, yScale, xAxis, yAxis, yAxisGridlines;
 
   let hoveredIndex = -1;
-  let brushSelection = [];
+  let brushSelection;
 
   let selectedCommits = [];
   let hasSelection = false;
@@ -146,11 +146,14 @@
     }
   }
 
-  function brushed(evt) {
-    brushSelection = evt.selection;
-  }
-
   $: hoveredCommit = commits[hoveredIndex] ?? {};
+
+  $: {
+    d3.select(svg).call(
+      d3.brush().on("start brush end", (e) => (brushSelection = e.selection))
+    );
+    d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
+  }
 
   $: selectedCommits = brushSelection ? commits.filter(isCommitSelected) : [];
 
@@ -166,13 +169,8 @@
     (d) => d.type
   );
 
-  $: {
-    d3.select(svg).call(d3.brush().on("start brush end", brushed));
-    d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
-  }
-
   function isCommitSelected(commit) {
-    if (brushSelection.length === 0) {
+    if (!brushSelection) {
       return false;
     }
     let min = { x: brushSelection[0][0], y: brushSelection[0][1] };
