@@ -134,17 +134,8 @@
 
     function brushed(evt) {
       brushSelection = evt.selection;
+      console.log("inside mount", brushSelection);
     }
-    selectedCommits = brushSelection ? commits.filter(isCommitSelected) : [];
-    hasSelection = brushSelection && selectedCommits.length > 0;
-    selectedLines = (hasSelection ? selectedCommits : commits).flatMap(
-      (d) => d.lines
-    );
-    languageBreakdown = d3.rollup(
-      selectedLines,
-      (v) => v.length,
-      (d) => d.language
-    );
     d3.select(svg).call(d3.brush().on("start brush end", brushed));
     d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
   });
@@ -162,31 +153,21 @@
     }
   }
 
-  // $: {
-  //   selectedCommits = brushSelection ? commits.filter(isCommitSelected) : [];
-  //   hasSelection = brushSelection && selectedCommits.length > 0;
-  //   selectedLines = (hasSelection ? selectedCommits : commits).flatMap(
-  //     (d) => d.lines
-  //   );
-  //   languageBreakdown = d3.rollup(
-  //     selectedLines,
-  //     (v) => v.length,
-  //     (d) => d.language
-  //   );
-  // }
-
   $: hoveredCommit = commits[hoveredIndex] ?? {};
 
-  // $: selectedCommits = brushSelection ? commits.filter(isCommitSelected) : [];
-  // $: hasSelection = brushSelection && selectedCommits.length > 0;
-  // $: selectedLines = (hasSelection ? selectedCommits : commits).flatMap(
-  //   (d) => d.lines
-  // );
-  // $: languageBreakdown = d3.rollup(
-  //   selectedLines,
-  //   (v) => v.length,
-  //   (d) => d.language
-  // );
+  $: selectedCommits = brushSelection ? commits.filter(isCommitSelected) : [];
+
+  $: hasSelection = brushSelection && selectedCommits.length > 0;
+
+  $: selectedLines = (hasSelection ? selectedCommits : commits).flatMap(
+    (d) => d.lines
+  );
+
+  $: languageBreakdown = d3.rollup(
+    selectedLines,
+    (v) => v.length,
+    (d) => d.language
+  );
 
   function isCommitSelected(commit) {
     console.log("outside mount", brushSelection);
@@ -195,8 +176,8 @@
       console.log("Brush selection is empty in iscommitselected");
       return false;
     }
-    let min = { x: brushSelection[0], y: brushSelection[0] };
-    let max = { x: brushSelection[1], y: brushSelection[1] };
+    let min = { x: brushSelection[0][0], y: brushSelection[0][1] };
+    let max = { x: brushSelection[1][0], y: brushSelection[1][1] };
     let x = xScale(commit.date);
     let y = yScale(commit.hourFrac);
     console.log(
