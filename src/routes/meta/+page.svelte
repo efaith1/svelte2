@@ -34,8 +34,7 @@
 
   let selectedCommits = [];
   let hasSelection = false;
-  let selectedLines = [];
-  let languageBreakdown = new Map();
+  let languageBreakdown;
 
   let hoveredCommit = {};
   let commitTooltip;
@@ -148,6 +147,17 @@
 
   $: hoveredCommit = commits[hoveredIndex] ?? {};
 
+  function isCommitSelected(commit) {
+    if (!brushSelection) {
+      return false;
+    }
+    let min = { x: brushSelection[0][0], y: brushSelection[0][1] };
+    let max = { x: brushSelection[1][0], y: brushSelection[1][1] };
+    let x = xScale(commit.date);
+    let y = yScale(commit.hourFrac);
+    return x >= min.x && x <= max.x && y >= min.y && y <= max.y;
+  }
+
   $: {
     d3.select(svg).call(
       d3.brush().on("start brush end", (e) => (brushSelection = e.selection))
@@ -159,25 +169,16 @@
 
   $: hasSelection = brushSelection && selectedCommits.length > 0;
 
-  $: selectedLines = (hasSelection ? selectedCommits : commits).flatMap(
-    (d) => d.lines
-  );
+  $: {
+    const selectedLines = (hasSelection ? selectedCommits : commits).flatMap(
+      (d) => d.lines
+    );
 
-  $: languageBreakdown = d3.rollup(
-    selectedLines,
-    (v) => v.length,
-    (d) => d.type
-  );
-
-  function isCommitSelected(commit) {
-    if (!brushSelection) {
-      return false;
-    }
-    let min = { x: brushSelection[0][0], y: brushSelection[0][1] };
-    let max = { x: brushSelection[1][0], y: brushSelection[1][1] };
-    let x = xScale(commit.date);
-    let y = yScale(commit.hourFrac);
-    return x >= min.x && x <= max.x && y >= min.y && y <= max.y;
+    languageBreakdown = d3.rollup(
+      selectedLines,
+      (v) => v.length,
+      (d) => d.type
+    );
   }
 </script>
 
@@ -311,6 +312,10 @@
     transition: transform 200ms;
     transform-origin: center;
     transform-box: fill-box;
+
+    &.selected {
+      fill: red;
+    }
   }
 
   circle:hover {
@@ -321,10 +326,6 @@
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 10px;
-  }
-
-  .dots circle.selected {
-    fill: red;
   }
 
   @keyframes marching-ants {
