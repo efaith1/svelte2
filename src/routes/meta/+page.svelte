@@ -12,7 +12,6 @@
   let numFiles = 0;
   let maxPeriod = "";
   let authors = 0;
-  let totalLinesEdited = 0;
   let svg;
 
   let width = 1000,
@@ -101,8 +100,6 @@
   }
 
   $: authors = d3.group(data, (d) => d.author).size;
-
-  $: totalLinesEdited = d3.sum(data, (d) => d.length);
 
   $: xScale = d3
     .scaleTime()
@@ -270,11 +267,6 @@
   <dt><b>Total Authors</b></dt>
   <dd>
     {authors}
-  </dd>
-
-  <dt><b>Lines edited</b></dt>
-  <dd>
-    {totalLinesEdited}
   </dd>
 </dl>
 
