@@ -40,6 +40,12 @@
   let commitTooltip;
   let tooltipPosition = { x: 0, y: 0 };
 
+  $: {
+    if (hoveredIndex != -1) {
+      hoveredCommit = commits[hoveredIndex];
+    }
+  }
+
   onMount(async () => {
     data = await d3.csv("loc.csv", (row) => ({
       ...row,
@@ -49,62 +55,67 @@
       date: new Date(row.date + "T00:00" + row.timezone),
       datetime: new Date(row.datetime),
     }));
+  });
 
-    commits = d3
-      .groups(data, (d) => d.commit)
-      .map(([commit, lines]) => {
-        let first = lines[0];
-        let { author, date, time, timezone, datetime } = first;
-        let ret = {
-          id: commit,
-          url: "https://github.com/vis-society/lab-7/commit/" + commit,
-          author,
-          date,
-          time,
-          timezone,
-          datetime,
-          hourFrac: datetime.getHours() + datetime.getMinutes() / 60,
-          totalLines: lines.length,
-        };
+  $: commits = d3
+    .groups(data, (d) => d.commit)
+    .map(([commit, lines]) => {
+      let first = lines[0];
+      let { author, date, time, timezone, datetime } = first;
+      let ret = {
+        id: commit,
+        url: "https://github.com/vis-society/lab-7/commit/" + commit,
+        author,
+        date,
+        time,
+        timezone,
+        datetime,
+        hourFrac: datetime.getHours() + datetime.getMinutes() / 60,
+        totalLines: lines.length,
+      };
 
-        Object.defineProperty(ret, "lines", {
-          value: lines,
-          configurable: true,
-          writable: true,
-          enumerable: false,
-        });
-
-        return ret;
+      Object.defineProperty(ret, "lines", {
+        value: lines,
+        configurable: true,
+        writable: true,
+        enumerable: false,
       });
 
-    totalLOC = data.length;
+      return ret;
+    });
+  $: d3.sort(commits, (d) => -d.totalLines);
 
-    numCommits = commits.length;
+  $: totalLOC = data.length;
 
-    numFiles = d3.group(data, (d) => d.file).size;
+  $: numCommits = commits.length;
 
+  $: numFiles = d3.group(data, (d) => d.file).size;
+
+  $: {
     let workByPeriod = d3.rollups(
       data,
       (v) => v.length,
       (d) => d.datetime.toLocaleString("en", { dayPeriod: "short" })
     );
     maxPeriod = d3.greatest(workByPeriod, (d) => d[1])?.[0];
+  }
 
-    authors = d3.group(data, (d) => d.author).size;
+  $: authors = d3.group(data, (d) => d.author).size;
 
-    totalLinesEdited = d3.sum(data, (d) => d.length);
+  $: totalLinesEdited = d3.sum(data, (d) => d.length);
 
-    xScale = d3
-      .scaleTime()
-      .domain(d3.extent(data, (d) => d.datetime))
-      .range([usableArea.left, usableArea.right])
-      .nice();
+  $: xScale = d3
+    .scaleTime()
+    .domain(d3.extent(data, (d) => d.datetime))
+    .range([usableArea.left, usableArea.right])
+    .nice();
 
-    yScale = d3
-      .scaleLinear()
-      .domain([0, 24])
-      .range([usableArea.top, usableArea.bottom]);
+  yScale = d3
+    .scaleLinear()
+    .domain([0, 24])
+    .range([usableArea.top, usableArea.bottom]);
 
+  $: {
     xAxis = d3
       .select(svg)
       .append("g")
@@ -122,7 +133,9 @@
           .axisLeft(yScale)
           .tickFormat((d) => String(d % 24).padStart(2, "0") + ":00")
       );
+  }
 
+  $: {
     yAxisGridlines = d3
       .select(svg)
       .append("g")
@@ -130,8 +143,14 @@
       .style("opacity", 0.2)
       .attr("transform", `translate(${usableArea.left}, 0)`)
       .call(d3.axisLeft(yScale).tickFormat("").tickSize(-usableArea.width));
-  });
+  }
 
+  $: {
+    d3.select(svg).call(
+      d3.brush().on("start brush end", (e) => (brushSelection = e.selection))
+    );
+    d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
+  }
   async function dotInteraction(index, evt) {
     if (evt.type === "mouseenter" || evt.type === "focus") {
       hoveredIndex = index;
@@ -156,13 +175,6 @@
     let x = xScale(commit.date);
     let y = yScale(commit.hourFrac);
     return x >= min.x && x <= max.x && y >= min.y && y <= max.y;
-  }
-
-  $: {
-    d3.select(svg).call(
-      d3.brush().on("start brush end", (e) => (brushSelection = e.selection))
-    );
-    d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
   }
 
   $: selectedCommits = brushSelection ? commits.filter(isCommitSelected) : [];
