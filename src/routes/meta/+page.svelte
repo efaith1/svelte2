@@ -166,7 +166,7 @@
   $: languageBreakdown = d3.rollup(
     selectedLines,
     (v) => v.length,
-    (d) => d.language
+    (d) => d.type
   );
 
   function isCommitSelected(commit) {
