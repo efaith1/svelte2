@@ -146,10 +146,10 @@
     }
   }
 
+  function brushed(evt) {
+    brushSelection = evt.selection;
+  }
   $: {
-    function brushed(evt) {
-      brushSelection = evt.selection;
-    }
     d3.select(svg).call(d3.brush().on("start brush end", brushed));
     d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
   }
