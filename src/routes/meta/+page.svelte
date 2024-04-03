@@ -291,10 +291,6 @@
     overflow: visible;
   }
 
-  .selected-dot {
-    fill: red;
-  }
-
   dl.info {
     transition-duration: 500ms;
     transition-property: opacity, visibility;
