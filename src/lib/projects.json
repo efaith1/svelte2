@@ -18,23 +18,11 @@
         "year": "2024"
     },
     {
-        "title": "6.C35 Programming Lab 8: Geospatial Visualization",
+        "title": "6.C35 Lab 8: Geospatial Visualization",
         "year": "2024",
         "link": "https://efaith1.github.io/bluebikes/",
         "image": "images/pokemen.png",
         "description": "Traffic of Boston's public bike system: Bluebikes"
-    },
-    {
-        "title": "Lorem ipsum dolor sit.",
-        "year": "2023",
-        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-        "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam dolor quos, quod assumenda explicabo odio, nobis ipsa laudantium quas eum veritatis ullam sint porro minima modi molestias doloribus cumque odit."
-    },
-    {
-        "title": "Lorem ipsum dolor sit.",
-        "year": "2022",
-        "image": "https://vis-society.github.io/labs/2/images/empty.svg",
-        "description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam dolor quos, quod assumenda explicabo odio, nobis ipsa laudantium quas eum veritatis ullam sint porro minima modi molestias doloribus cumque odit."
-    }                     
+    }
 ] 
 

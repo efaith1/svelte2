@@ -53,8 +53,6 @@
   <title>Projects</title>
 </svelte:head>
 
-<Pie data={pieData} bind:selectedIndex={selectedYearIndex} />
-
 <input
   type="search"
   bind:value={query}
@@ -67,6 +65,8 @@
     <Project info={p} />
   {/each}
 </div>
+
+<Pie data={pieData} bind:selectedIndex={selectedYearIndex} />
 
 <style>
   input[type="search"] {
