@@ -29,7 +29,6 @@
   let xScale, yScale, xAxis, yAxis, yAxisGridlines;
 
   let hoveredIndex = -1;
-  let brushSelection;
 
   let selectedCommits = [];
   let hasSelection = false;
@@ -39,11 +38,25 @@
   let commitTooltip;
   let tooltipPosition = { x: 0, y: 0 };
 
+  let commitProgress = 100;
+  let commitMaxTime;
+  let timeScale = d3
+    .scaleTime()
+    .domain(d3.extent(data, (d) => d.datetime))
+    .range([0, 100]);
+
   $: {
     if (hoveredIndex != -1) {
-      hoveredCommit = commits[hoveredIndex];
+      hoveredCommit = filteredCommits[hoveredIndex];
     }
   }
+
+  $: commitMaxTime = timeScale.invert(commitProgress);
+
+  $: filteredCommits = commits.filter(
+    (commit) => commit.datetime <= commitMaxTime
+  );
+  $: filteredLines = data.filter((line) => line.datetime <= commitMaxTime);
 
   onMount(async () => {
     data = await d3.csv("loc.csv", (row) => ({
@@ -82,28 +95,30 @@
 
       return ret;
     });
-  $: d3.sort(commits, (d) => -d.totalLines);
 
-  $: totalLOC = data.length;
+  // summary stats
+  $: d3.sort(filteredCommits, (d) => -d.totalLines);
 
-  $: numCommits = commits.length;
+  $: totalLOC = filteredLines.length;
 
-  $: numFiles = d3.group(data, (d) => d.file).size;
+  $: numCommits = filteredCommits.length;
+
+  $: numFiles = d3.group(filteredLines, (d) => d.file).size;
 
   $: {
     let workByPeriod = d3.rollups(
-      data,
+      filteredLines,
       (v) => v.length,
       (d) => d.datetime.toLocaleString("en", { dayPeriod: "short" })
     );
     maxPeriod = d3.greatest(workByPeriod, (d) => d[1])?.[0];
   }
 
-  $: authors = d3.group(data, (d) => d.author).size;
+  $: authors = d3.group(filteredLines, (d) => d.author).size;
 
   $: xScale = d3
     .scaleTime()
-    .domain(d3.extent(data, (d) => d.datetime))
+    .domain(d3.extent(filteredLines, (d) => d.datetime))
     .range([usableArea.left, usableArea.right])
     .nice();
 
@@ -143,9 +158,7 @@
   }
 
   $: {
-    d3.select(svg).call(
-      d3.brush().on("start brush end", (e) => (brushSelection = e.selection))
-    );
+    d3.select(svg).call(d3.brush().on("start brush end", (e) => brushed));
     d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
   }
   async function dotInteraction(index, evt) {
@@ -158,26 +171,35 @@
       });
     } else if (evt.type === "mouseleave" || evt.type === "blur") {
       hoveredIndex = -1;
+    } else if (
+      evt.type === "click" ||
+      (evt.type === "keyup" && evt.key === "Enter")
+    ) {
+      selectedCommits = [commits[index]];
     }
+    // CHANGED COMMITS
   }
 
-  $: hoveredCommit = commits[hoveredIndex] ?? {};
+  function brushed(evt) {
+    let brushSelection = evt.selection;
+    selectedCommits = !brushSelection
+      ? []
+      : filteredCommits.filter((commit) => {
+          let min = { x: brushSelection[0][0], y: brushSelection[0][1] };
+          let max = { x: brushSelection[1][0], y: brushSelection[1][1] };
+          let x = xScale(commit.date);
+          let y = yScale(commit.hourFrac);
+          return x >= min.x && x <= max.x && y >= min.y && y <= max.y;
+        });
+  }
 
   function isCommitSelected(commit) {
-    if (!brushSelection) {
-      return false;
-    }
-    let min = { x: brushSelection[0][0], y: brushSelection[0][1] };
-    let max = { x: brushSelection[1][0], y: brushSelection[1][1] };
-    let x = xScale(commit.date);
-    let y = yScale(commit.hourFrac);
-    return x >= min.x && x <= max.x && y >= min.y && y <= max.y;
+    return selectedCommits.includes(commit);
   }
 
-  $: selectedCommits = brushSelection ? commits.filter(isCommitSelected) : [];
+  $: hasSelection = selectedCommits.length > 0;
 
-  $: hasSelection = brushSelection && selectedCommits.length > 0;
-
+  // filteredcommits here
   $: {
     const selectedLines = (hasSelection ? selectedCommits : commits).flatMap(
       (d) => d.lines
@@ -198,9 +220,20 @@
 
 <h2>Title: Commits by time of day</h2>
 
+<label>
+  Filter commits by date:
+  <input type="range" min="0" max="100" step="1" bind:value={commitProgress} />
+  <time
+    >{commitMaxTime.toLocaleString("en", {
+      dateStyle: "long",
+      timeStyle: "short",
+    })}</time
+  >
+</label>
+
 <svg viewBox="0 0 {width} {height}" bind:this={svg}>
   <g class="dots">
-    {#each commits as commit, index}
+    {#each commits as commit, index (commit.id)}
       <circle
         class:selected={isCommitSelected(commit)}
         cx={xScale(commit.datetime)}
@@ -215,6 +248,8 @@
         on:blur={(evt) => dotInteraction(index, evt)}
         on:mouseenter={(evt) => dotInteraction(index, evt)}
         on:mouseleave={(evt) => dotInteraction(index, evt)}
+        on:click={(evt) => dotInteraction(index, evt)}
+        on:keyup={(evt) => dotInteraction(index, evt)}
       />
     {/each}
   </g>
@@ -313,12 +348,20 @@
   }
 
   circle {
-    transition: transform 200ms;
+    --r: 5;
+    transition:
+      all 200ms,
+      r calc(var(--r) * 100ms);
     transform-origin: center;
     transform-box: fill-box;
 
     &.selected {
       fill: red;
+    }
+
+    /* @starting-style rule */
+    @starting-style {
+      r: 0;
     }
   }
 
@@ -344,5 +387,18 @@
     stroke-opacity: 70%;
     stroke-dasharray: 5 3;
     animation: marching-ants 2s linear infinite;
+  }
+
+  label {
+    display: flex;
+    align-items: center;
+  }
+
+  input[type="range"] {
+    flex: 1;
+  }
+
+  time {
+    margin-top: 0.5em;
   }
 </style>
