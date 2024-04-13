@@ -43,7 +43,7 @@
     .scaleTime()
     .domain(d3.extent(data, (d) => d.datetime))
     .range([0, 100]);
-  console.log("timeScale", timeScale);
+  console.log(data.map((d) => d.datetime));
 
   $: {
     if (hoveredIndex != -1) {
