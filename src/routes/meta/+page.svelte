@@ -39,11 +39,11 @@
   let tooltipPosition = { x: 0, y: 0 };
 
   let commitProgress = 100;
-  let commitMaxTime;
   let timeScale = d3
     .scaleTime()
     .domain(d3.extent(data, (d) => d.datetime))
     .range([0, 100]);
+  console.log("timeScale", timeScale);
 
   $: {
     if (hoveredIndex != -1) {
