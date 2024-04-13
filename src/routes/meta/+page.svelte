@@ -4,6 +4,7 @@
   import { computePosition, autoPlacement, offset } from "@floating-ui/dom";
   import { format } from "d3-format";
   import Pie from "$lib/Pie.svelte";
+  import Scrolly from "svelte-scrolly";
 
   let data = [];
   let commits = [];
@@ -13,6 +14,7 @@
   let maxPeriod = "";
   let authors = 0;
   let svg;
+  let colors = d3.scaleOrdinal(schemeTableau10);
 
   let width = 1000,
     height = 600;
@@ -38,6 +40,8 @@
   let commitTooltip;
   let tooltipPosition = { x: 0, y: 0 };
 
+  let raceProgress = 0;
+  let dummyNarrative;
   let commitProgress = 100;
   let timeScale = d3
     .scaleTime()
@@ -211,6 +215,29 @@
       (d) => d.type
     );
   }
+
+  function generateDummyNarrative(commits) {
+    let narrative = "";
+    commits.forEach((commit, index) => {
+      narrative += `
+        <p>
+          On ${commit.datetime.toLocaleString("en", { dateStyle: "full", timeStyle: "short" })},
+          I made <a href="${commit.url}" target="_blank">${index > 0 ? "another glorious commit" : "my first commit, and it was glorious"}</a>.
+          I edited ${commit.totalLines} lines across ${
+            d3.rollups(
+              commit.lines,
+              (D) => D.length,
+              (d) => d.file
+            ).length
+          } files.
+          Then I looked over all I had made, and I saw that it was very good.
+        </p>
+      `;
+    });
+    return narrative;
+  }
+
+  $: dummyNarrative = generateDummyNarrative(commits);
 </script>
 
 <h1>Meta</h1>
@@ -220,40 +247,53 @@
 
 <h2>Title: Commits by time of day</h2>
 
-<label>
-  Filter commits by date:
-  <input type="range" min="0" max="100" step="1" bind:value={commitProgress} />
-  <time
-    >{commitMaxTime.toLocaleString("en", {
-      dateStyle: "long",
-      timeStyle: "short",
-    })}</time
-  >
-</label>
+<Scrolly bind:progress={commitProgress} throttle={100}>
+  {dummyNarrative}
+  <svelte:fragment slot="viz">
+    <svg viewBox="0 0 {width} {height}" bind:this={svg}>
+      <g class="dots">
+        {#each commits as commit, index (commit.id)}
+          <circle
+            class:selected={isCommitSelected(commit)}
+            cx={xScale(commit.datetime)}
+            cy={yScale(commit.hourFrac)}
+            r="5"
+            fill="steelblue"
+            tabindex="0"
+            aria-describedby="commit-tooltip"
+            role="tooltip"
+            aria-haspopup="true"
+            on:focus={(evt) => dotInteraction(index, evt)}
+            on:blur={(evt) => dotInteraction(index, evt)}
+            on:mouseenter={(evt) => dotInteraction(index, evt)}
+            on:mouseleave={(evt) => dotInteraction(index, evt)}
+            on:click={(evt) => dotInteraction(index, evt)}
+            on:keyup={(evt) => dotInteraction(index, evt)}
+          />
+        {/each}
+      </g>
+    </svg>
+    <Pie
+      {colors}
+      data={Array.from(languageBreakdown).map(([language, lines]) => ({
+        label: language,
+        value: lines,
+      }))}
+    />
+  </svelte:fragment>
+</Scrolly>
 
-<svg viewBox="0 0 {width} {height}" bind:this={svg}>
-  <g class="dots">
-    {#each commits as commit, index (commit.id)}
-      <circle
-        class:selected={isCommitSelected(commit)}
-        cx={xScale(commit.datetime)}
-        cy={yScale(commit.hourFrac)}
-        r="5"
-        fill="steelblue"
-        tabindex="0"
-        aria-describedby="commit-tooltip"
-        role="tooltip"
-        aria-haspopup="true"
-        on:focus={(evt) => dotInteraction(index, evt)}
-        on:blur={(evt) => dotInteraction(index, evt)}
-        on:mouseenter={(evt) => dotInteraction(index, evt)}
-        on:mouseleave={(evt) => dotInteraction(index, evt)}
-        on:click={(evt) => dotInteraction(index, evt)}
-        on:keyup={(evt) => dotInteraction(index, evt)}
-      />
-    {/each}
-  </g>
-</svg>
+<Scrolly
+  bind:progress={raceProgress}
+  throttle={100}
+  --scrolly-layout="viz-first"
+  --scrolly-viz-width="1.5fr"
+>
+  {dummyNarrative}
+  <svelte:fragment slot="viz">
+    <FileLines {colors} lines={filteredLines} />
+  </svelte:fragment>
+</Scrolly>
 
 <p>{hasSelection ? selectedCommits.length : "No"} commits selected</p>
 
@@ -262,13 +302,6 @@
     <div>{language}: {$format(".1~%")(lines / selectedLines.length)}</div>
   {/each}
 </section>
-
-<Pie
-  data={Array.from(languageBreakdown).map(([language, lines]) => ({
-    label: language,
-    value: lines,
-  }))}
-/>
 
 <dl
   id="commit-tooltip"
@@ -306,6 +339,9 @@
 </dl>
 
 <style>
+  :global(body) {
+    max-width: min(120ch, 80vw);
+  }
   dl {
     display: contents;
   }
