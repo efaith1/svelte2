@@ -43,7 +43,7 @@
     .scaleTime()
     .domain(d3.extent(commits, (commit) => commit.datetime))
     .range([0, 100]);
-  console.log(data.map((d) => d.datetime));
+  console.log(commits.map((d) => d.datetime));
 
   $: {
     if (hoveredIndex != -1) {
