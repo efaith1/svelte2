@@ -41,7 +41,7 @@
   let commitProgress = 100;
   let timeScale = d3
     .scaleTime()
-    .domain(d3.extent(data, (d) => d.datetime))
+    .domain(d3.extent(commits, (commit) => commit.datetime))
     .range([0, 100]);
   console.log(data.map((d) => d.datetime));
 
