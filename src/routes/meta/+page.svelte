@@ -5,6 +5,7 @@
   import { format } from "d3-format";
   import Pie from "$lib/Pie.svelte";
   import Scrolly from "svelte-scrolly";
+  import FileLines from "./FileLines.svelte";
 
   let data = [];
   let commits = [];
