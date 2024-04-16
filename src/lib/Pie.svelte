@@ -9,12 +9,11 @@
   let pieData;
   let wedges = {};
   let oldData = [];
-  export let transitionDuration = 3000;
+  export let transitionDuration = 3000; // add ms or nah
 
   $: {
-    oldData = pieData;
-    pieData = data.map((d) => ({ ...d }));
     pieData = d3.sort(data, (d) => d.label);
+    oldData = pieData;
 
     let arcData = [];
     let arcs = [];
@@ -31,6 +30,7 @@
     transitionArcs();
   }
 
+  // function 1/6 - called below, looks fine
   function sameArc(arc1, arc2) {
     if (!arc1 || !arc2) {
       return !arc1 && !arc2;
@@ -40,6 +40,7 @@
     );
   }
 
+  // function 2/6 - wrote
   function transitionArcs() {
     let wedgeElements = Object.values(wedges);
 
@@ -54,17 +55,18 @@
       });
   }
 
+  // function 3/6 - called above
   function transitionArc(wedge, label) {
     label ??= Object.entries(wedges).find(([label, w]) => w === wedge)[0];
     let d = pieData.find((d) => d.label === label);
-    let d_old = oldData[label];
+    let d_old = oldData.find((d) => d.label === label);
 
     if (sameArc(d_old, d)) {
       return null;
     }
 
     let from = d_old ? { ...d_old } : getEmptyArc(label, oldData);
-    let to = { ...d };
+    let to = d ? { ...d } : getEmptyArc(label, pieData);
     let angleInterpolator = d3.interpolate(from, to);
 
     let interpolator = (t) => `path("${arcGenerator(angleInterpolator(t))}")`;
@@ -74,13 +76,15 @@
     return { d, d_old, from, to, interpolator, type };
   }
 
+  // function 4/6 - used as a transition directive in path for svg below
+  // possible source of error............
   function arc(wedge) {
     return {
       duration: transitionDuration,
       easing: d3.easeCubic,
       css: (t, u) => {
         let transition = transitionArc(wedge);
-        if (!transition) return ""; // No transition needed
+        if (!transition) return "";
 
         let { d, d_old, from, to, type } = transition;
         let arcString = type === "update" ? d : type === "in" ? to : from;
@@ -89,6 +93,7 @@
     };
   }
 
+  // function 5/6 - given
   function getEmptyArc(label, data = pieData) {
     let labels = d3.sort(new Set([...oldData, ...pieData].map((d) => d.label)));
     let labelIndex = labels.indexOf(label);
@@ -104,6 +109,7 @@
     return { startAngle: angle, endAngle: angle };
   }
 
+  // function 6/6 - defined previously
   function toggleWedge(label, event) {
     if (!event.key || event.key === "Enter") {
       selectedIndex = selectedIndex === label ? -1 : label;
