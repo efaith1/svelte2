@@ -8,7 +8,7 @@ let pages = {
    "svelte2/contact" : "Contact",
    "svelte2/resume": "Resume",
    "svelte2/meta":"Meta",
-    "https://github.com/efaith1/Esther-F.-website": "Github"}
+    "https://github.com/efaith1/svelte2": "Github"}
 ;
 
 const nav = document.createElement("nav");

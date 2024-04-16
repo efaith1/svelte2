@@ -14,7 +14,7 @@
   let maxPeriod = "";
   let authors = 0;
   let svg;
-  let colors = d3.scaleOrdinal(schemeTableau10);
+  let colors = d3.scaleOrdinal(d3.schemeTableau10);
 
   let width = 1000,
     height = 600;
@@ -40,28 +40,39 @@
   let commitTooltip;
   let tooltipPosition = { x: 0, y: 0 };
 
-  let raceProgress = 0;
+  let fileProgress = 100; // need to do more for this
   let dummyNarrative;
   let commitProgress = 100;
+  let minDatetime = d3.min(data, (d) => d.commit.datetime); // or pieData
+  let maxDatetime = d3.max(data, (d) => d.commit.datetime);
   let timeScale = d3
     .scaleTime()
-    .domain(d3.extent(commits, (commit) => commit.datetime))
+    .domain([minDatetime, maxDatetime])
     .range([0, 100]);
-  console.log(commits.map((d) => d.datetime));
-
-  $: {
-    if (hoveredIndex != -1) {
-      hoveredCommit = filteredCommits[hoveredIndex];
-    }
-  }
+  console.log(commits.map((d) => d.datetime)); // possible source of error
+  let filteredCommits;
+  let filteredLines;
+  let filteredFileCommits;
+  let filteredFileLines;
 
   $: commitMaxTime = timeScale.invert(commitProgress);
+  $: fileMaxTime = timeScale.invert(fileProgress);
 
   $: filteredCommits = commits.filter(
     (commit) => commit.datetime <= commitMaxTime
   );
   $: filteredLines = data.filter((line) => line.datetime <= commitMaxTime);
 
+  $: filteredFileCommits = commits.filter(
+    (commit) => commit.datetime <= fileMaxTime
+  );
+  $: filteredFileLines = data.filter((line) => line.datetime <= fileMaxTime);
+
+  $: {
+    if (hoveredIndex != -1) {
+      hoveredCommit = filteredCommits[hoveredIndex];
+    }
+  }
   onMount(async () => {
     data = await d3.csv("loc.csv", (row) => ({
       ...row,
@@ -181,7 +192,6 @@
     ) {
       selectedCommits = [commits[index]];
     }
-    // CHANGED COMMITS
   }
 
   function brushed(evt) {
@@ -203,7 +213,6 @@
 
   $: hasSelection = selectedCommits.length > 0;
 
-  // filteredcommits here
   $: {
     const selectedLines = (hasSelection ? selectedCommits : commits).flatMap(
       (d) => d.lines
@@ -216,28 +225,28 @@
     );
   }
 
-  function generateDummyNarrative(commits) {
-    let narrative = "";
-    commits.forEach((commit, index) => {
-      narrative += `
-        <p>
-          On ${commit.datetime.toLocaleString("en", { dateStyle: "full", timeStyle: "short" })},
-          I made <a href="${commit.url}" target="_blank">${index > 0 ? "another glorious commit" : "my first commit, and it was glorious"}</a>.
-          I edited ${commit.totalLines} lines across ${
-            d3.rollups(
-              commit.lines,
-              (D) => D.length,
-              (d) => d.file
-            ).length
-          } files.
-          Then I looked over all I had made, and I saw that it was very good.
-        </p>
-      `;
-    });
-    return narrative;
-  }
+  // function generateDummyNarrative(commits) {
+  //   let narrative = "";
+  //   commits.forEach((commit, index) => {
+  //     narrative += `
+  //       <p>
+  //         On ${commit.datetime.toLocaleString("en", { dateStyle: "full", timeStyle: "short" })},
+  //         I made <a href="${commit.url}" target="_blank">${index > 0 ? "another glorious commit" : "my first commit, and it was glorious"}</a>.
+  //         I edited ${commit.totalLines} lines across ${
+  //           d3.rollups(
+  //             commit.lines,
+  //             (D) => D.length,
+  //             (d) => d.file
+  //           ).length
+  //         } files.
+  //         Then I looked over all I had made, and I saw that it was very good.
+  //       </p>
+  //     `;
+  //   });
+  //   return narrative;
+  // }
 
-  $: dummyNarrative = generateDummyNarrative(commits);
+  // $: dummyNarrative = generateDummyNarrative(commits);
 </script>
 
 <h1>Meta</h1>
@@ -247,12 +256,32 @@
 
 <h2>Title: Commits by time of day</h2>
 
-<Scrolly bind:progress={commitProgress} throttle={100}>
-  {dummyNarrative}
+<Scrolly bind:progress={commitProgress} throttle={200}>
+  <!-- {dummyNarrative} -->
+  {#each commits as commit, index}
+    <p>
+      On {commit.datetime.toLocaleString("en", {
+        dateStyle: "full",
+        timeStyle: "short",
+      })}, I made
+      <a href={commit.url} target="_blank"
+        >{index > 0
+          ? "another glorious commit"
+          : "my first commit, and it was glorious"}</a
+      >. I edited {commit.totalLines} lines across {d3.rollups(
+        commit.lines,
+        (D) => D.length,
+        (d) => d.file
+      ).length} files. Then I looked over all I had made, and I saw that it was very
+      good.
+    </p>
+  {/each}
+
   <svelte:fragment slot="viz">
     <svg viewBox="0 0 {width} {height}" bind:this={svg}>
       <g class="dots">
-        {#each commits as commit, index (commit.id)}
+        <!-- // filteredcommits or nah -->
+        {#each filteredCommits as commit, index (commit.id)}
           <circle
             class:selected={isCommitSelected(commit)}
             cx={xScale(commit.datetime)}
@@ -273,6 +302,7 @@
         {/each}
       </g>
     </svg>
+
     <Pie
       {colors}
       data={Array.from(languageBreakdown).map(([language, lines]) => ({
@@ -280,28 +310,47 @@
         value: lines,
       }))}
     />
+    <section>
+      {#each Array.from(languageBreakdown) as [language, lines]}
+        <div>{language}: {$format(".1~%")(lines / selectedLines.length)}</div>
+      {/each}
+    </section>
   </svelte:fragment>
 </Scrolly>
 
 <Scrolly
-  bind:progress={raceProgress}
-  throttle={100}
+  bind:progress={fileProgress}
+  throttle={200}
   --scrolly-layout="viz-first"
   --scrolly-viz-width="1.5fr"
 >
-  {dummyNarrative}
+  <!-- {dummyNarrative} -->
+  {#each commits as commit, index}
+    <p>
+      On {commit.datetime.toLocaleString("en", {
+        dateStyle: "full",
+        timeStyle: "short",
+      })}, I made
+      <a href={commit.url} target="_blank"
+        >{index > 0
+          ? "another glorious commit"
+          : "my first commit, and it was glorious"}</a
+      >. I edited {commit.totalLines} lines across {d3.rollups(
+        commit.lines,
+        (D) => D.length,
+        (d) => d.file
+      ).length} files. Then I looked over all I had made, and I saw that it was very
+      good.
+    </p>
+  {/each}
+
   <svelte:fragment slot="viz">
-    <FileLines {colors} lines={filteredLines} />
+    <!-- <FileLines {colors} lines={filteredLines} /> -->
+    <FileLines {colors} lines={filteredFileLines} />
   </svelte:fragment>
 </Scrolly>
 
 <p>{hasSelection ? selectedCommits.length : "No"} commits selected</p>
-
-<section>
-  {#each Array.from(languageBreakdown) as [language, lines]}
-    <div>{language}: {$format(".1~%")(lines / selectedLines.length)}</div>
-  {/each}
-</section>
 
 <dl
   id="commit-tooltip"
@@ -423,15 +472,6 @@
     stroke-opacity: 70%;
     stroke-dasharray: 5 3;
     animation: marching-ants 2s linear infinite;
-  }
-
-  label {
-    display: flex;
-    align-items: center;
-  }
-
-  input[type="range"] {
-    flex: 1;
   }
 
   time {

@@ -1,6 +1,4 @@
 <script>
-  import { onMount } from "svelte";
-  import { format } from "d3-format";
   import { flip as originalFlip } from "svelte/animate";
 
   import * as d3 from "d3";
@@ -16,9 +14,11 @@
     files = d3.sort(files, (d) => -d.lines.length);
   }
 
+  // something about duration
   function getFlip() {
     return originalFlip;
   }
+
   $: flip = getFlip(files);
 </script>
 
@@ -43,19 +43,28 @@
 </dl>
 
 <style>
-  dl.files {
+  .files {
     display: grid;
-    gap: 1em;
   }
 
-  dl.files > div {
+  .files > div {
+    grid-column: 1 / -1;
     display: grid;
-    gap: 0.5em;
+    grid-template-columns: subgrid;
     background: hsl(0 0% 100% / 90%);
     box-shadow: 0 0 0.2em 0.2em hsl(0 0% 100% / 90%);
   }
 
+  .files dt {
+    grid-column: 1;
+  }
+
+  .files dd {
+    grid-column: 2;
+  }
+
   .line {
+    display: flex;
     width: 0.5em;
     aspect-ratio: 1;
     background: steelblue;
