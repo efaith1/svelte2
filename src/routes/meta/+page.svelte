@@ -237,10 +237,10 @@
 <section>
   <dl class="stats" style="flex-direction: row;">
     <dt>TOTAL <abbr title="Lines of code">LOC</abbr></dt>
-    <dd>52</dd>
+    <dd>1186</dd>
 
     <dt>COMMITS</dt>
-    <dd>3</dd>
+    <dd>344</dd>
 
     <dt>AVERAGE LINE LENGTH</dt>
     <dd>20.25</dd>
@@ -255,7 +255,7 @@
 
 <h2>Title: Commits by time of day</h2>
 
-<Scrolly bind:progress={commitProgress} throttle={300}>
+<Scrolly bind:progress={commitProgress} throttle={100}>
   {#each commits as commit, index}
     <p>
       On {commit.datetime.toLocaleString("en", {
