@@ -227,11 +227,11 @@
   let dummyNarrative = [
     "Advancing my proficiency in HTML5 and CSS3 for responsive designs",
     "Deepening my understanding of JavaScript libraries like D3.js for interactive visualizations",
-    "Strengthening my grasp of data visualization frameworks such as Chart.js or Plotly.js",
+    "Strengthening my grasp of data visualization frameworks such as Svelte",
     "Improving the performance of my web-based data visualizations",
     "Sharpening my skills in integrating data APIs into web applications",
     "Refining my knowledge of SVG graphics for scalable and dynamic visualizations",
-    "Broadening my expertise in WebGL for high-performance 3D visualizations",
+    "Broadening my expertise in animated CSS for high-performance 3D visualizations",
     "Elevating the accessibility of my data visualizations for diverse users",
     "Enhancing the responsiveness and user experience of my data-driven web applications",
     "Fine-tuning my understanding of data formats such as JSON and CSV for web-based visualizations",
@@ -384,7 +384,7 @@
   </svelte:fragment>
 </Scrolly>
 
-<div style="text-align: center;">
+<div style="text-align: center; padding-top:100px">
   <h1>Codebase evaluation</h1>
 </div>
 
