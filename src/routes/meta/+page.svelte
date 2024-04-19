@@ -319,14 +319,6 @@
             style=" --r: {rScale(commit.totalLines)};"
           />
         {/each}
-
-        {#each selectedCommits as commit}
-          <circle
-            cy={yScale(commit.hourFrac)}
-            r={rScale(commit.totalLines)}
-            fill="red"
-          />
-        {/each}
       </g>
     </svg>
 
