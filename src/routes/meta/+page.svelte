@@ -145,14 +145,14 @@
 
   $: {
     xAxis = d3
-      .select(svg)
+      .select(xAxis)
       .append("g")
       .attr("class", "x-axis")
       .attr("transform", `translate(0, ${usableArea.bottom})`)
       .call(d3.axisBottom(xScale));
 
     yAxis = d3
-      .select(svg)
+      .select(yAxis)
       .append("g")
       .attr("class", "y-axis")
       .attr("transform", `translate(${usableArea.left}, 0)`)
@@ -165,7 +165,7 @@
 
   $: {
     yAxisGridlines = d3
-      .select(svg)
+      .select(yAxisGridlines)
       .append("g")
       .attr("class", "gridlines")
       .style("opacity", 0.2)
