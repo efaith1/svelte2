@@ -277,12 +277,7 @@
       On {commit.datetime.toLocaleString("en", {
         dateStyle: "full",
         timeStyle: "short",
-      })}, I made
-      <a href={commit.url} target="_blank"
-        >{index > 0
-          ? "another glorious commit"
-          : "my first commit, and it was glorious"}</a
-      >. I edited {commit.totalLines} lines across {d3.rollups(
+      })}, I edited {commit.totalLines} lines across {d3.rollups(
         commit.lines,
         (D) => D.length,
         (d) => d.file
@@ -291,14 +286,13 @@
   {/each}
 
   <svelte:fragment slot="viz">
+    <!-- cx={xScale(commit.datetime)}
+            cy={yScale(commit.hourFrac)} -->
     <svg viewBox="0 0 {width} {height}" bind:this={svg}>
       <g class="dots">
-        <!-- // filteredcommits or nah -->
         {#each filteredCommits as commit, index (commit.id)}
           <circle
             class:selected={isCommitSelected(commit)}
-            cx={xScale(commit.datetime)}
-            cy={yScale(commit.hourFrac)}
             r={rScale(commit.totalLines)}
             fill="steelblue"
             tabindex="0"
@@ -384,12 +378,7 @@
       On {commit.datetime.toLocaleString("en", {
         dateStyle: "full",
         timeStyle: "short",
-      })}, I made
-      <a href={commit.url} target="_blank"
-        >{index > 0
-          ? "another glorious commit"
-          : "my first commit, and it was glorious"}</a
-      >. I edited {commit.totalLines} lines across {d3.rollups(
+      })}, I edited {commit.totalLines} lines across {d3.rollups(
         commit.lines,
         (D) => D.length,
         (d) => d.file
