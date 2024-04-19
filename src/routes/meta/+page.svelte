@@ -384,6 +384,10 @@
   </svelte:fragment>
 </Scrolly>
 
+<div>
+  <h2>Codebase evaluation</h2>
+</div>
+
 <Scrolly
   bind:progress={fileProgress}
   throttle={200}
@@ -409,8 +413,6 @@
   {/each}
 
   <svelte:fragment slot="viz">
-    <!-- <FileLines {colors} lines={filteredLines} /> -->
-    <h1>Codebase evaluation</h1>
     <FileLines lines={filteredFileLines} {colors} />
   </svelte:fragment>
 </Scrolly>
