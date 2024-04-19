@@ -144,33 +144,17 @@
     .nice();
 
   $: {
-    xAxis = d3
-      .select(xAxis)
-      .append("g")
-      .attr("class", "x-axis")
-      .attr("transform", `translate(0, ${usableArea.bottom})`)
-      .call(d3.axisBottom(xScale));
-
-    yAxis = d3
-      .select(yAxis)
-      .append("g")
-      .attr("class", "y-axis")
-      .attr("transform", `translate(${usableArea.left}, 0)`)
-      .call(
-        d3
-          .axisLeft(yScale)
-          .tickFormat((d) => String(d % 24).padStart(2, "0") + ":00")
-      );
+    d3.select(xAxis).call(d3.axisBottom(xScale));
+    d3.select(yAxis).call(
+      d3
+        .axisLeft(yScale)
+        .tickFormat((d) => String(d % 24).padStart(2, "0") + ":00")
+    );
   }
-
   $: {
-    yAxisGridlines = d3
-      .select(yAxisGridlines)
-      .append("g")
-      .attr("class", "gridlines")
-      .style("opacity", 0.2)
-      .attr("transform", `translate(${usableArea.left}, 0)`)
-      .call(d3.axisLeft(yScale).tickFormat("").tickSize(-usableArea.width));
+    d3.select(yAxisGridlines).call(
+      d3.axisLeft(yScale).tickFormat("").tickSize(-usableArea.width)
+    );
   }
 
   $: {
@@ -317,6 +301,13 @@
           />
         {/each}
       </g>
+      <g
+        class="gridlines"
+        transform="translate({usableArea.left}, 0)"
+        bind:this={yAxisGridlines}
+      />
+      <g transform="translate(0, {usableArea.bottom})" bind:this={xAxis} />
+      <g transform="translate({usableArea.left}, 0)" bind:this={yAxis} />
     </svg>
 
     <dl
