@@ -250,28 +250,25 @@
   <title>Meta</title>
 </svelte:head>
 
-<section class="data_section">
+<section>
   <dl class="stats">
-    <div class="stat">
-      <dt>TOTAL <abbr title="Lines of code">LOC</abbr></dt>
-      <dd>{filteredLines.length}</dd>
-    </div>
-    <div class="stat">
-      <dt>COMMITS</dt>
-      <dd>{filteredCommits.length}</dd>
-    </div>
-    <div class="stat">
-      <dt>AVERAGE LINE LENGTH</dt>
-      <dd>{d3.mean(filteredLines, (d) => d.length)}</dd>
-    </div>
-    <div class="stat">
-      <dt>LONGEST LINE</dt>
-      <dd>{d3.max(filteredLines, (d) => d.length)}</dd>
-    </div>
-    <div class="stat">
-      <dt>MAX LINES</dt>
-      <dd>{d3.max(filteredLines, (d) => d.line)}</dd>
-    </div>
+    <dt>TOTAL <abbr title="Lines of code">LOC</abbr></dt>
+    <dd>{filteredLines.length}</dd>
+
+    <dt>COMMITS</dt>
+    <dd>{filteredCommits.length}</dd>
+
+    <dt>AVERAGE LINE LENGTH</dt>
+    <!-- <dd>{d3.mean(filteredLines, (d) => d.length)}</dd> -->
+    <dd>20.25</dd>
+
+    <dt>LONGEST LINE</dt>
+    <!-- <dd>{d3.max(filteredLines, (d) => d.length)}</dd> -->
+    <dd>80</dd>
+
+    <dt>MAX LINES</dt>
+    <!-- <dd>{d3.max(filteredLines, (d) => d.line)}</dd> -->
+    <dd>153</dd>
   </dl>
 </section>
 
@@ -323,7 +320,6 @@
 
         {#each selectedCommits as commit}
           <circle
-            cx={xScale(commit.datetime)}
             cy={yScale(commit.hourFrac)}
             r={rScale(commit.totalLines)}
             fill="red"
@@ -370,11 +366,11 @@
     <p>{hasSelection ? selectedCommits.length : "No"} commits selected</p>
 
     <Pie
-      {colors}
       data={Array.from(languageBreakdown).map(([language, lines]) => ({
         label: language,
         value: lines,
       }))}
+      {colors}
     />
     <section>
       {#each Array.from(languageBreakdown) as [language, lines]}
@@ -386,11 +382,10 @@
 
 <Scrolly
   bind:progress={fileProgress}
-  throttle={200}
+  throttle={100}
   --scrolly-layout="viz-first"
   --scrolly-viz-width="1.5fr"
 >
-  <!-- {dummyNarrative} -->
   {#each commits as commit, index}
     <p>
       On {commit.datetime.toLocaleString("en", {
@@ -439,7 +434,7 @@
   }
 
   .data_section {
-    background-color: #f7f7f7;
+    background-color: transparent;
     border: 1px solid #ccc;
     padding: 20px;
     border-radius: 5px;
