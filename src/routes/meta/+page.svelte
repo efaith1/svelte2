@@ -386,7 +386,7 @@
 
 <Scrolly
   bind:progress={fileProgress}
-  throttle={300}
+  throttle={200}
   --scrolly-layout="viz-first"
   --scrolly-viz-width="1.5fr"
 >

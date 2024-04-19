@@ -33,8 +33,8 @@
         {#each file.lines as line (line.line)}
           <div
             class="line"
-            style="--color: {colors(line.type)}"
             transition:scale={2}
+            style="--color: {colors(line.type)}"
             animate:flip
           ></div>
         {/each}
