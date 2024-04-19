@@ -252,23 +252,25 @@
 
 <section>
   <dl class="stats">
-    <dt>TOTAL <abbr title="Lines of code">LOC</abbr></dt>
-    <dd>{filteredLines.length}</dd>
+    <div class="flex-container">
+      <dt>TOTAL <abbr title="Lines of code">LOC</abbr></dt>
+      <dd>{filteredLines.length}</dd>
 
-    <dt>COMMITS</dt>
-    <dd>{filteredCommits.length}</dd>
+      <dt>COMMITS</dt>
+      <dd>{filteredCommits.length}</dd>
 
-    <dt>AVERAGE LINE LENGTH</dt>
-    <!-- <dd>{d3.mean(filteredLines, (d) => d.length)}</dd> -->
-    <dd>20.25</dd>
+      <dt>AVERAGE LINE LENGTH</dt>
+      <!-- <dd>{d3.mean(filteredLines, (d) => d.length)}</dd> -->
+      <dd>20.25</dd>
 
-    <dt>LONGEST LINE</dt>
-    <!-- <dd>{d3.max(filteredLines, (d) => d.length)}</dd> -->
-    <dd>80</dd>
+      <dt>LONGEST LINE</dt>
+      <!-- <dd>{d3.max(filteredLines, (d) => d.length)}</dd> -->
+      <dd>80</dd>
 
-    <dt>MAX LINES</dt>
-    <!-- <dd>{d3.max(filteredLines, (d) => d.line)}</dd> -->
-    <dd>153</dd>
+      <dt>MAX LINES</dt>
+      <!-- <dd>{d3.max(filteredLines, (d) => d.line)}</dd> -->
+      <dd>153</dd>
+    </div>
   </dl>
 </section>
 
@@ -382,7 +384,7 @@
 
 <Scrolly
   bind:progress={fileProgress}
-  throttle={100}
+  throttle={300}
   --scrolly-layout="viz-first"
   --scrolly-viz-width="1.5fr"
 >
@@ -442,15 +444,16 @@
   }
 
   .stats {
+    display: inline-block;
     list-style-type: none;
     padding: 0;
     margin: 0;
   }
 
-  .stat {
+  .flex-container {
     display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   dt {
