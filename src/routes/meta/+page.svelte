@@ -385,37 +385,37 @@
 </Scrolly>
 
 <div>
-  <h2>Codebase evaluation</h2>
+  <h1>Codebase evaluation</h1>
+
+  <Scrolly
+    bind:progress={fileProgress}
+    throttle={200}
+    --scrolly-layout="viz-first"
+    --scrolly-viz-width="1.5fr"
+  >
+    {#each commits as commit, index}
+      <p>
+        On {commit.datetime.toLocaleString("en", {
+          dateStyle: "full",
+          timeStyle: "short",
+        })}, I made
+        <a href={commit.url} target="_blank"
+          >{index > 0
+            ? "another glorious commit"
+            : "my first commit, and it was glorious"}</a
+        >. I edited {commit.totalLines} lines across {d3.rollups(
+          commit.lines,
+          (D) => D.length,
+          (d) => d.file
+        ).length} files. {choose_phrase()}.
+      </p>
+    {/each}
+
+    <svelte:fragment slot="viz">
+      <FileLines lines={filteredFileLines} {colors} />
+    </svelte:fragment>
+  </Scrolly>
 </div>
-
-<Scrolly
-  bind:progress={fileProgress}
-  throttle={200}
-  --scrolly-layout="viz-first"
-  --scrolly-viz-width="1.5fr"
->
-  {#each commits as commit, index}
-    <p>
-      On {commit.datetime.toLocaleString("en", {
-        dateStyle: "full",
-        timeStyle: "short",
-      })}, I made
-      <a href={commit.url} target="_blank"
-        >{index > 0
-          ? "another glorious commit"
-          : "my first commit, and it was glorious"}</a
-      >. I edited {commit.totalLines} lines across {d3.rollups(
-        commit.lines,
-        (D) => D.length,
-        (d) => d.file
-      ).length} files. {choose_phrase()}.
-    </p>
-  {/each}
-
-  <svelte:fragment slot="viz">
-    <FileLines lines={filteredFileLines} {colors} />
-  </svelte:fragment>
-</Scrolly>
 
 <style>
   :global(body) {

@@ -33,8 +33,8 @@
         {#each file.lines as line (line.line)}
           <div
             class="line"
-            transition:scale={2}
             style="--color: {colors(line.type)}"
+            transition:scale={2}
             animate:flip
           ></div>
         {/each}
@@ -69,6 +69,7 @@
     width: 0.5em;
     aspect-ratio: 1;
     border-radius: 50%;
+    background: var(--color);
   }
 
   dl {
