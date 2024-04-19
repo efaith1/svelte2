@@ -251,7 +251,7 @@
 </svelte:head>
 
 <section>
-  <dl class="stats">
+  <dl class="stats" style="flex-direction: row;">
     <dt>TOTAL <abbr title="Lines of code">LOC</abbr></dt>
     <!-- <dd>{filteredLines.length}</dd> -->
     <dd>52</dd>
@@ -319,14 +319,14 @@
             style=" --r: {rScale(commit.totalLines)};"
           />
         {/each}
-        {#each selectedCommits as commit}
+        <!-- {#each selectedCommits as commit}
           <circle
             cx={xScale(commit.datetime)}
             cy={yScale(commit.hourFrac)}
             r={rScale(commit.totalLines)}
-            fill="orange"
+            fill="red"
           />
-        {/each}
+        {/each} -->
       </g>
     </svg>
 
@@ -450,12 +450,6 @@
     list-style-type: none;
     padding: 0;
     margin: 0;
-  }
-
-  .flex-container {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
   }
 
   dt {
