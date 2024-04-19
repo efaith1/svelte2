@@ -3,7 +3,7 @@
 
   export let data = [];
   export let selectedIndex = -1;
-  export let colors = d3.scaleOrdinal(d3.schemeTableau10);
+  export let colors = [];
   export let transitionDuration = 3000; // add ms or nah
 
   let arcData = [];
