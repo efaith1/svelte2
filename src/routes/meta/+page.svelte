@@ -148,8 +148,8 @@
       .select(svg)
       .append("g")
       .attr("class", "x-axis")
-      .attr("transform", `translate(0, ${usableArea.bottom})`);
-    // .call(d3.axisBottom(xScale));
+      .attr("transform", `translate(0, ${usableArea.bottom})`)
+      .call(d3.axisBottom(xScale));
 
     yAxis = d3
       .select(svg)
@@ -158,7 +158,7 @@
       .attr("transform", `translate(${usableArea.left}, 0)`)
       .call(
         d3
-          // .axisLeft(yScale)
+          .axisLeft(yScale)
           .tickFormat((d) => String(d % 24).padStart(2, "0") + ":00")
       );
   }
