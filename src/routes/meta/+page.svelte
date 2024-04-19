@@ -148,8 +148,8 @@
       .select(svg)
       .append("g")
       .attr("class", "x-axis")
-      .attr("transform", `translate(0, ${usableArea.bottom})`)
-      .call(d3.axisBottom(xScale));
+      .attr("transform", `translate(0, ${usableArea.bottom})`);
+    // .call(d3.axisBottom(xScale));
 
     yAxis = d3
       .select(svg)
@@ -158,7 +158,7 @@
       .attr("transform", `translate(${usableArea.left}, 0)`)
       .call(
         d3
-          .axisLeft(yScale)
+          // .axisLeft(yScale)
           .tickFormat((d) => String(d % 24).padStart(2, "0") + ":00")
       );
   }
@@ -286,13 +286,13 @@
   {/each}
 
   <svelte:fragment slot="viz">
-    <!-- cx={xScale(commit.datetime)}
-            cy={yScale(commit.hourFrac)} -->
     <svg viewBox="0 0 {width} {height}" bind:this={svg}>
       <g class="dots">
         {#each filteredCommits as commit, index (commit.id)}
           <circle
             class:selected={isCommitSelected(commit)}
+            cx={xScale(commit.datetime)}
+            cy={yScale(commit.hourFrac)}
             r={rScale(commit.totalLines)}
             fill="steelblue"
             tabindex="0"
