@@ -2,7 +2,7 @@
   import * as d3 from "d3";
   import { onMount } from "svelte";
   import { computePosition, autoPlacement, offset } from "@floating-ui/dom";
-  import { format } from "d3-format";
+  import { format } from "d3-format"; //was ist das
   import Pie from "$lib/Pie.svelte";
   import Scrolly from "svelte-scrolly";
   import FileLines from "./FileLines.svelte";
@@ -41,20 +41,17 @@
   let commitTooltip;
   let tooltipPosition = { x: 0, y: 0 };
 
-  let fileProgress = 100; // need to do more for this
-  let dummyNarrative;
-  let commitProgress = 100;
-  let minDatetime = d3.min(data, (d) => d.commit.datetime); // or pieData
-  let maxDatetime = d3.max(data, (d) => d.commit.datetime);
-  let timeScale = d3
+  let fileProgress = 0; // need to do more for this
+  let commitProgress = 0;
+
+  $: timeScale = d3
     .scaleTime()
-    .domain([minDatetime, maxDatetime])
-    .range([0, 100]);
-  console.log(commits.map((d) => d.datetime)); // possible source of error
+    .domain(d3.extent(data, (d) => d.date))
+    .range([0, 100])
+    .nice();
+
   let filteredCommits;
   let filteredLines;
-  let filteredFileCommits;
-  let filteredFileLines;
 
   $: commitMaxTime = timeScale.invert(commitProgress);
   $: fileMaxTime = timeScale.invert(fileProgress);
@@ -64,9 +61,6 @@
   );
   $: filteredLines = data.filter((line) => line.datetime <= commitMaxTime);
 
-  $: filteredFileCommits = commits.filter(
-    (commit) => commit.datetime <= fileMaxTime
-  );
   $: filteredFileLines = data.filter((line) => line.datetime <= fileMaxTime);
 
   $: {
@@ -143,6 +137,12 @@
     .domain([0, 24])
     .range([usableArea.top, usableArea.bottom]);
 
+  $: rScale = d3
+    .scaleSqrt()
+    .domain(d3.extent(data, (d) => d.length))
+    .range([3, 30])
+    .nice();
+
   $: {
     xAxis = d3
       .select(svg)
@@ -174,7 +174,7 @@
   }
 
   $: {
-    d3.select(svg).call(d3.brush().on("start brush end", (e) => brushed));
+    d3.select(svg).call(d3.brush().on("start brush end", brushed));
     d3.select(svg).selectAll(".dots, .overlay ~ *").raise();
   }
   async function dotInteraction(index, evt) {
@@ -214,17 +214,15 @@
 
   $: hasSelection = selectedCommits.length > 0;
 
-  $: {
-    const selectedLines = (hasSelection ? selectedCommits : commits).flatMap(
-      (d) => d.lines
-    );
+  $: selectedLines = (hasSelection ? selectedCommits : filteredCommits).flatMap(
+    (d) => d.lines
+  );
 
-    languageBreakdown = d3.rollup(
-      selectedLines,
-      (v) => v.length,
-      (d) => d.type
-    );
-  }
+  $: languageBreakdown = d3.rollup(
+    selectedLines,
+    (v) => v.length,
+    (d) => d.type
+  );
 
   // function generateDummyNarrative(commits) {
   //   let narrative = "";
@@ -248,6 +246,25 @@
   // }
 
   // $: dummyNarrative = generateDummyNarrative(commits);
+  let phrase = [
+    "Advancing my proficiency in HTML5 and CSS3 for responsive designs",
+    "Deepening my understanding of JavaScript libraries like D3.js for interactive visualizations",
+    "Strengthening my grasp of data visualization frameworks such as Chart.js or Plotly.js",
+    "Improving the performance of my web-based data visualizations",
+    "Sharpening my skills in integrating data APIs into web applications",
+    "Refining my knowledge of SVG graphics for scalable and dynamic visualizations",
+    "Broadening my expertise in WebGL for high-performance 3D visualizations",
+    "Elevating the accessibility of my data visualizations for diverse users",
+    "Enhancing the responsiveness and user experience of my data-driven web applications",
+    "Fine-tuning my understanding of data formats such as JSON and CSV for web-based visualizations",
+    "Amplifying the security measures in my web applications handling sensitive data",
+    "Enriching the interactivity of my data visualizations through user interactions and animations",
+    "Optimizing the cross-browser compatibility and performance of my web-based data visualizations",
+  ];
+  function choose_phrase() {
+    let index = Math.floor(Math.random() * phrase.length);
+    return phrase[index];
+  }
 </script>
 
 <h1>Meta</h1>
@@ -255,10 +272,24 @@
   <title>Meta</title>
 </svelte:head>
 
+<section class="data_section">
+  <dl class="stats">
+    <dt>TOTAL <abbr title="Lines of code">LOC</abbr></dt>
+    <dd>{filteredLines.length}</dd>
+    <dt>COMMITS</dt>
+    <dd>{filteredCommits.length}</dd>
+    <dt>AVERAGE LINE LENGTH</dt>
+    <dd>{d3.mean(filteredLines, (d) => d.length)}</dd>
+    <dt>LONGEST LINE</dt>
+    <dd>{d3.max(filteredLines, (d) => d.length)}</dd>
+    <dt>MAX LINES</dt>
+    <dd>{d3.max(filteredLines, (d) => d.line)}</dd>
+  </dl>
+</section>
+
 <h2>Title: Commits by time of day</h2>
 
-<Scrolly bind:progress={commitProgress} throttle={200}>
-  <!-- {dummyNarrative} -->
+<Scrolly bind:progress={commitProgress} throttle={300}>
   {#each commits as commit, index}
     <p>
       On {commit.datetime.toLocaleString("en", {
@@ -273,8 +304,7 @@
         commit.lines,
         (D) => D.length,
         (d) => d.file
-      ).length} files. Then I looked over all I had made, and I saw that it was very
-      good.
+      ).length} files. {choose_phrase()}.
     </p>
   {/each}
 
@@ -287,7 +317,7 @@
             class:selected={isCommitSelected(commit)}
             cx={xScale(commit.datetime)}
             cy={yScale(commit.hourFrac)}
-            r="5"
+            r={rScale(commit.totalLines)}
             fill="steelblue"
             tabindex="0"
             aria-describedby="commit-tooltip"
@@ -299,10 +329,57 @@
             on:mouseleave={(evt) => dotInteraction(index, evt)}
             on:click={(evt) => dotInteraction(index, evt)}
             on:keyup={(evt) => dotInteraction(index, evt)}
+            style=" --r: {rScale(commit.totalLines)};"
+          />
+        {/each}
+
+        {#each selectedCommits as commit}
+          <circle
+            cx={xScale(commit.datetime)}
+            cy={yScale(commit.hourFrac)}
+            r={rScale(commit.totalLines)}
+            fill="red"
           />
         {/each}
       </g>
     </svg>
+
+    <dl
+      id="commit-tooltip"
+      class="info tooltip"
+      hidden={hoveredIndex === -1}
+      style={`top: ${tooltipPosition.y}px; left: ${tooltipPosition.x}px`}
+      bind:this={commitTooltip}
+    >
+      <dt><b>Commit</b></dt>
+      <dd>
+        <a href={hoveredCommit.url} target="_blank">{hoveredCommit.id}</a>
+      </dd>
+
+      <dt><b>Date</b></dt>
+      <dd>{hoveredCommit.datetime?.toLocaleString("en", { date: "full" })}</dd>
+
+      <dt>
+        <b>Total</b> <abbr title="Lines of code"><b>lines of code</b></abbr>
+      </dt>
+      <dd>{totalLOC}</dd>
+
+      <dt><b>Total Commits</b></dt>
+      <dd>{numCommits}</dd>
+
+      <dt><b>Files</b></dt>
+      <dd>{numFiles}</dd>
+
+      <dt><b>Time of Day most work is done</b></dt>
+      <dd>{maxPeriod}</dd>
+
+      <dt><b>Total Authors</b></dt>
+      <dd>
+        {authors}
+      </dd>
+    </dl>
+
+    <p>{hasSelection ? selectedCommits.length : "No"} commits selected</p>
 
     <Pie
       {colors}
@@ -340,53 +417,16 @@
         commit.lines,
         (D) => D.length,
         (d) => d.file
-      ).length} files. Then I looked over all I had made, and I saw that it was very
-      good.
+      ).length} files. {choose_phrase()}.
     </p>
   {/each}
 
   <svelte:fragment slot="viz">
     <!-- <FileLines {colors} lines={filteredLines} /> -->
-    <FileLines {colors} lines={filteredFileLines} />
+    <h1>Codebase evaluation</h1>
+    <FileLines lines={filteredFileLines} {colors} />
   </svelte:fragment>
 </Scrolly>
-
-<p>{hasSelection ? selectedCommits.length : "No"} commits selected</p>
-
-<dl
-  id="commit-tooltip"
-  class="info tooltip"
-  hidden={hoveredIndex === -1}
-  style={`top: ${tooltipPosition.y}px; left: ${tooltipPosition.x}px`}
-  bind:this={commitTooltip}
->
-  <dt><b>Commit</b></dt>
-  <dd>
-    <a href={hoveredCommit.url} target="_blank">{hoveredCommit.id}</a>
-  </dd>
-
-  <dt><b>Date</b></dt>
-  <dd>{hoveredCommit.datetime?.toLocaleString("en", { date: "full" })}</dd>
-
-  <dt>
-    <b>Total</b> <abbr title="Lines of code"><b>lines of code</b></abbr>
-  </dt>
-  <dd>{totalLOC}</dd>
-
-  <dt><b>Total Commits</b></dt>
-  <dd>{numCommits}</dd>
-
-  <dt><b>Files</b></dt>
-  <dd>{numFiles}</dd>
-
-  <dt><b>Time of Day most work is done</b></dt>
-  <dd>{maxPeriod}</dd>
-
-  <dt><b>Total Authors</b></dt>
-  <dd>
-    {authors}
-  </dd>
-</dl>
 
 <style>
   :global(body) {
