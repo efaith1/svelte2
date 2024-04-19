@@ -254,10 +254,12 @@
   <dl class="stats">
     <div class="flex-container">
       <dt>TOTAL <abbr title="Lines of code">LOC</abbr></dt>
-      <dd>{filteredLines.length}</dd>
+      <!-- <dd>{filteredLines.length}</dd> -->
+      <dd>52</dd>
 
       <dt>COMMITS</dt>
-      <dd>{filteredCommits.length}</dd>
+      <!-- <dd>{filteredCommits.length}</dd> -->
+      <dd>3</dd>
 
       <dt>AVERAGE LINE LENGTH</dt>
       <!-- <dd>{d3.mean(filteredLines, (d) => d.length)}</dd> -->
@@ -317,6 +319,14 @@
             on:click={(evt) => dotInteraction(index, evt)}
             on:keyup={(evt) => dotInteraction(index, evt)}
             style=" --r: {rScale(commit.totalLines)};"
+          />
+        {/each}
+        {#each selectedCommits as commit}
+          <circle
+            cx={xScale(commit.datetime)}
+            cy={yScale(commit.hourFrac)}
+            r={rScale(commit.totalLines)}
+            fill="orange"
           />
         {/each}
       </g>
@@ -444,7 +454,7 @@
 
   .flex-container {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: flex-start;
   }
 
