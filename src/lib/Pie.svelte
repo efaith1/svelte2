@@ -17,6 +17,8 @@
     .value((d) => d.value)
     .sort(null);
 
+  $: pieData = data.map((d) => ({ ...d }));
+
   $: {
     arcData = sliceGenerator(pieData);
     arcs = arcData.map((d) => arcGenerator(d));
