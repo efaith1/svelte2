@@ -252,27 +252,25 @@
 
 <section>
   <dl class="stats">
-    <div class="flex-container">
-      <dt>TOTAL <abbr title="Lines of code">LOC</abbr></dt>
-      <!-- <dd>{filteredLines.length}</dd> -->
-      <dd>52</dd>
+    <dt>TOTAL <abbr title="Lines of code">LOC</abbr></dt>
+    <!-- <dd>{filteredLines.length}</dd> -->
+    <dd>52</dd>
 
-      <dt>COMMITS</dt>
-      <!-- <dd>{filteredCommits.length}</dd> -->
-      <dd>3</dd>
+    <dt>COMMITS</dt>
+    <!-- <dd>{filteredCommits.length}</dd> -->
+    <dd>3</dd>
 
-      <dt>AVERAGE LINE LENGTH</dt>
-      <!-- <dd>{d3.mean(filteredLines, (d) => d.length)}</dd> -->
-      <dd>20.25</dd>
+    <dt>AVERAGE LINE LENGTH</dt>
+    <!-- <dd>{d3.mean(filteredLines, (d) => d.length)}</dd> -->
+    <dd>20.25</dd>
 
-      <dt>LONGEST LINE</dt>
-      <!-- <dd>{d3.max(filteredLines, (d) => d.length)}</dd> -->
-      <dd>80</dd>
+    <dt>LONGEST LINE</dt>
+    <!-- <dd>{d3.max(filteredLines, (d) => d.length)}</dd> -->
+    <dd>80</dd>
 
-      <dt>MAX LINES</dt>
-      <!-- <dd>{d3.max(filteredLines, (d) => d.line)}</dd> -->
-      <dd>153</dd>
-    </div>
+    <dt>MAX LINES</dt>
+    <!-- <dd>{d3.max(filteredLines, (d) => d.line)}</dd> -->
+    <dd>153</dd>
   </dl>
 </section>
 
@@ -385,7 +383,7 @@
 </Scrolly>
 
 <div style="text-align: center; padding-top:100px">
-  <h1>Codebase evaluation</h1>
+  <h1>Codebase Evolution</h1>
 </div>
 
 <Scrolly
