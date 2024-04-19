@@ -253,23 +253,18 @@
 <section>
   <dl class="stats" style="flex-direction: row;">
     <dt>TOTAL <abbr title="Lines of code">LOC</abbr></dt>
-    <!-- <dd>{filteredLines.length}</dd> -->
     <dd>52</dd>
 
     <dt>COMMITS</dt>
-    <!-- <dd>{filteredCommits.length}</dd> -->
     <dd>3</dd>
 
     <dt>AVERAGE LINE LENGTH</dt>
-    <!-- <dd>{d3.mean(filteredLines, (d) => d.length)}</dd> -->
     <dd>20.25</dd>
 
     <dt>LONGEST LINE</dt>
-    <!-- <dd>{d3.max(filteredLines, (d) => d.length)}</dd> -->
     <dd>80</dd>
 
     <dt>MAX LINES</dt>
-    <!-- <dd>{d3.max(filteredLines, (d) => d.line)}</dd> -->
     <dd>153</dd>
   </dl>
 </section>
@@ -319,14 +314,6 @@
             style=" --r: {rScale(commit.totalLines)};"
           />
         {/each}
-        <!-- {#each selectedCommits as commit}
-          <circle
-            cx={xScale(commit.datetime)}
-            cy={yScale(commit.hourFrac)}
-            r={rScale(commit.totalLines)}
-            fill="red"
-          />
-        {/each} -->
       </g>
     </svg>
 
