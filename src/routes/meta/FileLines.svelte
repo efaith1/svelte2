@@ -1,9 +1,9 @@
 <script>
   import { flip as originalFlip } from "svelte/animate";
-
+  import { scale } from "svelte/transition";
   import * as d3 from "d3";
-  export let lines = [];
 
+  export let lines = [];
   export let colors = d3.scaleOrdinal(d3.schemeTableau10);
 
   let files = [];
@@ -16,7 +16,6 @@
     files = d3.sort(files, (d) => -d.lines.length);
   }
 
-  // something about duration
   function getFlip() {
     return originalFlip;
   }
@@ -34,9 +33,9 @@
         {#each file.lines as line (line.line)}
           <div
             class="line"
-            in:scale
-            animate:flip
+            transition:scale={2}
             style="--color: {colors(line.type)}"
+            animate:flip
           ></div>
         {/each}
       </dd>
