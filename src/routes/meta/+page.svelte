@@ -2,7 +2,7 @@
   import * as d3 from "d3";
   import { onMount } from "svelte";
   import { computePosition, autoPlacement, offset } from "@floating-ui/dom";
-  import { format } from "d3-format"; //was ist das
+  import { format } from "d3-format";
   import Pie from "$lib/Pie.svelte";
   import Scrolly from "svelte-scrolly";
   import FileLines from "./FileLines.svelte";
@@ -41,7 +41,7 @@
   let commitTooltip;
   let tooltipPosition = { x: 0, y: 0 };
 
-  let fileProgress = 0; // need to do more for this
+  let fileProgress = 0;
   let commitProgress = 0;
 
   $: timeScale = d3
@@ -224,29 +224,7 @@
     (d) => d.type
   );
 
-  // function generateDummyNarrative(commits) {
-  //   let narrative = "";
-  //   commits.forEach((commit, index) => {
-  //     narrative += `
-  //       <p>
-  //         On ${commit.datetime.toLocaleString("en", { dateStyle: "full", timeStyle: "short" })},
-  //         I made <a href="${commit.url}" target="_blank">${index > 0 ? "another glorious commit" : "my first commit, and it was glorious"}</a>.
-  //         I edited ${commit.totalLines} lines across ${
-  //           d3.rollups(
-  //             commit.lines,
-  //             (D) => D.length,
-  //             (d) => d.file
-  //           ).length
-  //         } files.
-  //         Then I looked over all I had made, and I saw that it was very good.
-  //       </p>
-  //     `;
-  //   });
-  //   return narrative;
-  // }
-
-  // $: dummyNarrative = generateDummyNarrative(commits);
-  let phrase = [
+  let dummyNarrative = [
     "Advancing my proficiency in HTML5 and CSS3 for responsive designs",
     "Deepening my understanding of JavaScript libraries like D3.js for interactive visualizations",
     "Strengthening my grasp of data visualization frameworks such as Chart.js or Plotly.js",
@@ -262,8 +240,8 @@
     "Optimizing the cross-browser compatibility and performance of my web-based data visualizations",
   ];
   function choose_phrase() {
-    let index = Math.floor(Math.random() * phrase.length);
-    return phrase[index];
+    let index = Math.floor(Math.random() * dummyNarrative.length);
+    return dummyNarrative[index];
   }
 </script>
 
@@ -274,16 +252,26 @@
 
 <section class="data_section">
   <dl class="stats">
-    <dt>TOTAL <abbr title="Lines of code">LOC</abbr></dt>
-    <dd>{filteredLines.length}</dd>
-    <dt>COMMITS</dt>
-    <dd>{filteredCommits.length}</dd>
-    <dt>AVERAGE LINE LENGTH</dt>
-    <dd>{d3.mean(filteredLines, (d) => d.length)}</dd>
-    <dt>LONGEST LINE</dt>
-    <dd>{d3.max(filteredLines, (d) => d.length)}</dd>
-    <dt>MAX LINES</dt>
-    <dd>{d3.max(filteredLines, (d) => d.line)}</dd>
+    <div class="stat">
+      <dt>TOTAL <abbr title="Lines of code">LOC</abbr></dt>
+      <dd>{filteredLines.length}</dd>
+    </div>
+    <div class="stat">
+      <dt>COMMITS</dt>
+      <dd>{filteredCommits.length}</dd>
+    </div>
+    <div class="stat">
+      <dt>AVERAGE LINE LENGTH</dt>
+      <dd>{d3.mean(filteredLines, (d) => d.length)}</dd>
+    </div>
+    <div class="stat">
+      <dt>LONGEST LINE</dt>
+      <dd>{d3.max(filteredLines, (d) => d.length)}</dd>
+    </div>
+    <div class="stat">
+      <dt>MAX LINES</dt>
+      <dd>{d3.max(filteredLines, (d) => d.line)}</dd>
+    </div>
   </dl>
 </section>
 
@@ -448,6 +436,35 @@
 
   svg {
     overflow: visible;
+  }
+
+  .data_section {
+    background-color: #f7f7f7;
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+  }
+
+  .stats {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .stat {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  dt {
+    font-weight: bold;
+  }
+
+  dd {
+    margin-left: 0;
+    font-style: italic;
   }
 
   dl.info {
