@@ -5,24 +5,31 @@
         "link":"A2.html",
         "year": "2024"
     },
-    {   "title": "6.C35 Assignment 3: Visualization Design",
-        "image": "images/lionking.png", 
-        "description": "In the previous assignment, you created a large number of visualizations but likely stuck with the default design choices the software package (e.g., Tableau) made. In this assignment, you will instead focus on these design choices by sketching 3 visualizations, and then crafting a single visualization from a small dataset. You should, in theory, be able to justify the contribution of every element of the visualization.", 
-        "link":"A3.html",
-        "year": "2024"
-    },
-    {   "title": "6.C35 Assignment 4: Persuasive/ Deceptive Visualization", 
-        "image": "images/noface.png", 
-        "description": "In this assignment, you will grapple with how to design visualizations ethically by crafting two different, opposing perspectives to the same question posed about a single dataset. Once this assignment is complete, we will (anonymously) peer review each other’s visualizations during a future lecture session.", 
-        "link":"A4.html",
-        "year": "2024"
-    },
     {
         "title": "6.C35 Programming Lab 8: Geospatial Visualization",
         "year": "2024",
         "link": "https://efaith1.github.io/bluebikes/",
-        "image": "images/pokemen.png",
+        "image": "images/lionking.png",
         "description": "In this lab, we will: Learn how to embed a Mapbox map into a webpage, Learn to add data-driven layers within a Mapbox canvas, Learn to add custom SVG overlays on Mapbox maps and adapt to the map’s panning and zooming, Practice creating visualizations with large datasets of real-world data, by importing, parsing, filtering and binding to elements on the page."
-    }
+    },
+    {
+        "title": "6.C35 Final Project",
+        "year": "2024",
+        "link": "https://usonia09.github.io/zipcode-affordability/",
+        "image": "images/pokemen.png",
+        "description": "6.C35 Final Project. Not a lab. In this lab, we will: Learn how to embed a Mapbox map into a webpage, Learn to add data-driven layers within a Mapbox canvas, Learn to add custom SVG overlays on Mapbox maps and adapt to the map’s panning and zooming, Practice creating visualizations with large datasets of real-world data, by importing, parsing, filtering and binding to elements on the page."
+    },
+    {   "title": "6.C35 Assignment 3: Visualization Design",
+    "image": "images/goofy.jpeg", 
+    "description": "In the previous assignment, you created a large number of visualizations but likely stuck with the default design choices the software package (e.g., Tableau) made. In this assignment, you will instead focus on these design choices by sketching 3 visualizations, and then crafting a single visualization from a small dataset. You should, in theory, be able to justify the contribution of every element of the visualization.", 
+    "link":"A3.html",
+    "year": "2024"
+},
+{   "title": "6.C35 Assignment 4: Persuasive/ Deceptive Visualization", 
+    "image": "images/noface.png", 
+    "description": "In this assignment, you will grapple with how to design visualizations ethically by crafting two different, opposing perspectives to the same question posed about a single dataset. Once this assignment is complete, we will (anonymously) peer review each other’s visualizations during a future lecture session.", 
+    "link":"A4.html",
+    "year": "2024"
+}
 ] 
 
